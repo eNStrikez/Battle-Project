@@ -62,6 +62,8 @@ public class Core implements MouseListener, MouseMotionListener, KeyListener{
 		frame.addMouseMotionListener(this);
 		frame.addKeyListener(this);
 		frame.setUndecorated(true);
+		
+		System.out.println("Hello");
 
 		allList = new ArrayList<Unit>();
 
