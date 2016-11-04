@@ -113,6 +113,9 @@ public class Unit {
 	public int getAgroRange(){
 		return agroRange;
 	}
+	public void setAgroRange(int newAgroRange){
+		agroRange = newAgroRange;
+	}
 
 	public int getType(){
 		return type;

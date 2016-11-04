@@ -4,8 +4,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -19,20 +23,29 @@ public class InfoPanel extends JPanel{
 	ArrayList<Unit> selectedUnits;
 	JPanel controlOptionPane;
 	JSlider agroSlider;
-	
+	EventManager eM;
+	Boolean gamePaused;
+	JButton pauseButton;
+	JLabel currentGameSpeedLabel;
+	float currentGameSpeed = 1;
 
-	public InfoPanel(int panelWidth, int panelHeight){
+
+
+	public InfoPanel(int panelWidth, int panelHeight, EventManager newEventManager){
+		setPreferredSize(new Dimension(panelWidth, panelHeight));
+
 		this.panelWidth = panelWidth;
 		this.panelHeight = panelHeight;
+		eM = newEventManager;
 
 		selectedUnits = new ArrayList<Unit>();
 
 		Paint display = new Paint();
 		display.setPreferredSize(new Dimension(panelWidth, panelHeight - 200));
-		
+
 		controlOptionPane = new JPanel();
 		controlOptionPane.setPreferredSize(new Dimension(panelWidth, 200));
-		
+
 		JLabel agroSliderLabel = new JLabel("Agression Range");
 		agroSliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		agroSlider = new JSlider(JSlider.HORIZONTAL, 0, 500, 100);
@@ -41,6 +54,7 @@ public class InfoPanel extends JPanel{
 			@Override
 			public void stateChanged(ChangeEvent event) {
 				//update agro range on selected units
+				eM.updateAgroRangeForMapDisplay(agroSlider.getValue());
 				repaint();
 			}
 
@@ -50,14 +64,77 @@ public class InfoPanel extends JPanel{
 		agroSlider.setMinorTickSpacing(20);
 		agroSlider.setPaintTicks(true);
 		agroSlider.setPaintLabels(true);
+
+		gamePaused = false;
+
+		JPanel timeControlls = new JPanel();
+		timeControlls.setPreferredSize(new Dimension(200, 100));
 		
+		currentGameSpeedLabel  = new JLabel("Current Game Speed: " + currentGameSpeed);
+		pauseButton = new JButton("Pause");
+		pauseButton.setFocusable(false);
+		pauseButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				eM.updateTime(0);
+				//pause the game
+				gamePaused = !gamePaused;
+				if(gamePaused){
+					pauseButton.setText("Play");
+					currentGameSpeedLabel.setText("Game Paused");
+				} else {
+					pauseButton.setText("Pause");
+					currentGameSpeedLabel.setText("Current Game Speed: " + currentGameSpeed);
+				}
+			}
+
+		});
+
+		JButton slowTimeButton = new JButton("Slower");
+		slowTimeButton.setFocusable(false);
+		slowTimeButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if(currentGameSpeed > 0.25){
+					currentGameSpeed = currentGameSpeed / 2;
+					eM.updateTime(currentGameSpeed);
+					currentGameSpeedLabel.setText("Current Game Speed: " + currentGameSpeed);
+				}
+			}
+
+		});
+
+		JButton fastTimeButton = new JButton("Faster");
+		fastTimeButton.setFocusable(false);
+		fastTimeButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if(currentGameSpeed < 4){
+					currentGameSpeed = currentGameSpeed * 2;
+					eM.updateTime(currentGameSpeed);
+					currentGameSpeedLabel.setText("Current Game Speed: " + currentGameSpeed);
+				}
+			}
+
+		});
+
+		timeControlls.setLayout(new GridLayout(1, 0));
+		timeControlls.add(slowTimeButton);
+		timeControlls.add(pauseButton);
+		timeControlls.add(fastTimeButton);
+
 		controlOptionPane.add(agroSliderLabel);
 		controlOptionPane.add(agroSlider);
-		
+		controlOptionPane.add(currentGameSpeedLabel);
+		controlOptionPane.add(timeControlls);
+
 		add(BorderLayout.CENTER, display);
 		add(BorderLayout.SOUTH, controlOptionPane);
 	}
-	
+
 	public void updateSelectedUnits(ArrayList<Unit> newSelectedUnits){
 		selectedUnits.clear();
 		selectedUnits.addAll(newSelectedUnits);
