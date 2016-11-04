@@ -96,6 +96,8 @@ public class MapDisplay extends JPanel{
 
 		//give the units to the movement manager for collision detection
 		mM.addUnitList(allList);
+		
+		System.out.println("Hello");
 
 		Paint display = new Paint();
 		display.setPreferredSize(new Dimension(screenWidth - 200, screenHeight));
