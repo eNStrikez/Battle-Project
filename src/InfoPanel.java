@@ -41,10 +41,10 @@ public class InfoPanel extends JPanel{
 		selectedUnits = new ArrayList<Unit>();
 
 		Paint display = new Paint();
-		display.setPreferredSize(new Dimension(panelWidth, panelHeight - 200));
+		display.setPreferredSize(new Dimension(panelWidth, panelHeight - 300));
 
 		controlOptionPane = new JPanel();
-		controlOptionPane.setPreferredSize(new Dimension(panelWidth, 200));
+		controlOptionPane.setPreferredSize(new Dimension(panelWidth, 300));
 
 		JLabel agroSliderLabel = new JLabel("Agression Range");
 		agroSliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -68,7 +68,7 @@ public class InfoPanel extends JPanel{
 		gamePaused = false;
 
 		JPanel timeControlls = new JPanel();
-		timeControlls.setPreferredSize(new Dimension(200, 100));
+		timeControlls.setPreferredSize(new Dimension(300, 100));
 		
 		currentGameSpeedLabel  = new JLabel("Current Game Speed: " + currentGameSpeed);
 		pauseButton = new JButton("Pause");

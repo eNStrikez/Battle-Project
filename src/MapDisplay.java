@@ -53,7 +53,7 @@ public class MapDisplay extends JPanel{
 
 		allList = new ArrayList<Unit>();
 
-		setPreferredSize(new Dimension(screenWidth - 200, screenHeight));
+		setPreferredSize(new Dimension(screenWidth - 300, screenHeight));
 
 		blockages = new Obstruction[100][100];
 
@@ -69,7 +69,7 @@ public class MapDisplay extends JPanel{
 
 		sM = new SaveManager();
 		blockages = sM.loadBlockages("StartMap.txt");
-		pF = new PathFinder(blockages, screenWidth - 200);
+		pF = new PathFinder(blockages, screenWidth - 300);
 		mM = new MovementManager(blockages);
 
 
@@ -96,11 +96,9 @@ public class MapDisplay extends JPanel{
 
 		//give the units to the movement manager for collision detection
 		mM.addUnitList(allList);
-		
-		System.out.println("Hello");
 
 		Paint display = new Paint();
-		display.setPreferredSize(new Dimension(screenWidth - 200, screenHeight));
+		display.setPreferredSize(new Dimension(screenWidth - 300, screenHeight));
 		add(display);
 
 		normalRunTimerSpeed = 20;
@@ -161,7 +159,7 @@ public class MapDisplay extends JPanel{
 			Graphics2D g = (Graphics2D) gr;
 
 			g.setColor(Color.GRAY);
-			g.fillRect(0, 0, screenWidth - 200, screenHeight);
+			g.fillRect(0, 0, screenWidth - 300, screenHeight);
 
 			for(int x = 0; x < 100; x ++){
 				for(int y = 0; y < 100; y ++){
