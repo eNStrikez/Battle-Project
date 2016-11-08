@@ -1,100 +1,124 @@
-import java.awt.BorderLayout;
+
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javax.swing.JPanel;
 
 
 public class FrameManager implements MouseListener, MouseMotionListener, KeyListener{
 	JFrame frame;
 	EventManager eM;
-	MapDisplay mD;
-	InfoPanel iP;
-	
-	public FrameManager(int screenWidth, int screenHeight, EventManager eM, MapDisplay mD, InfoPanel iP){
+	CardManager cM;
+	MenuManager menuPanel;
+
+	public FrameManager(int screenWidth, int screenHeight, EventManager eM, CardManager cM, MenuManager menuPanel){
 		frame = new JFrame();
 		frame.setSize(new Dimension(screenWidth, screenHeight));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
-		
+
 		this.eM = eM;
-		this.mD = mD;
-		this.iP = iP;
-		
+		this.cM = cM;
+		this.menuPanel = menuPanel;
+
 		frame.addMouseListener(this);
 		frame.addMouseMotionListener(this);
 		frame.addKeyListener(this);
 		frame.setUndecorated(true);
-		
-		frame.add(BorderLayout.WEST, mD);
-		frame.add(BorderLayout.EAST, iP);
-		
+
+		frame.add(cM);
+
 		frame.setVisible(true);
 	}
 
 	@Override
 	public void keyPressed(KeyEvent event) {
-		 eM.keyPressed(event);
-		
+		switch(cM.getCurrentCard()){
+		case "BattleCard":
+			eM.keyPressed(event);
+			break;
+		case "MenuCard":
+			menuPanel.keyPressed(event);
+		default:
+			break;
+		}
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent event) {
-		 
-		
+
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent event) {
-		 
-		
+
+
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent event) {
-		 eM.mouseDragged(event);
-		
+		switch(cM.getCurrentCard()){
+		case "BattleCard":
+			eM.mouseDragged(event);
+			break;
+		default:
+			break;
+		}
+
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent event) {
-		 
-		
+
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
-		 eM.mouseClicked(event);
-		
+		switch(cM.getCurrentCard()){
+		case "BattleCard":
+			eM.mouseDragged(event);
+			break;
+		default:
+			break;
+		}
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent event) {
-		 
-		
+
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent event) {
-		 
-		
+
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent event) {
-		 
-		
+
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent event) {
-		 eM.mouseReleased(event);
-		
+		switch(cM.getCurrentCard()){
+		case "BattleCard":
+			eM.mouseReleased(event);
+			break;
+		default:
+			break;
+		}
+
 	}
 }
