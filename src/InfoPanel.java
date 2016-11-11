@@ -28,6 +28,8 @@ public class InfoPanel extends JPanel{
 	JButton pauseButton;
 	JLabel currentGameSpeedLabel;
 	float currentGameSpeed = 1;
+	
+	CardManager cM;
 
 
 
@@ -120,11 +122,23 @@ public class InfoPanel extends JPanel{
 			}
 
 		});
+		
+		JButton retreatButton = new JButton("Retreat");
+		retreatButton.setFocusable(false);
+		retreatButton.addActionListener(new ActionListener(){
 
-		timeControlls.setLayout(new GridLayout(1, 0));
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				escapeBattle();
+			}
+			
+		});
+
+		timeControlls.setLayout(new GridLayout(3, 0));
 		timeControlls.add(slowTimeButton);
 		timeControlls.add(pauseButton);
 		timeControlls.add(fastTimeButton);
+		timeControlls.add(retreatButton);
 
 		controlOptionPane.add(agroSliderLabel);
 		controlOptionPane.add(agroSlider);
@@ -139,6 +153,15 @@ public class InfoPanel extends JPanel{
 		selectedUnits.clear();
 		selectedUnits.addAll(newSelectedUnits);
 		repaint();
+	}
+	
+	public void escapeBattle(){
+		cM.showCard("MenuCard");
+		eM.resetBattle();
+	}
+	
+	public void giveCardManager(CardManager newCM){
+		cM = newCM;
 	}
 
 	public class Paint extends JPanel{

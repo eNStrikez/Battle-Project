@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 
@@ -16,29 +17,57 @@ public class MenuManager extends JPanel{
 	int screenWidth;
 	int screenHeight;
 	CardManager cM;
+	String origin;
 
 	public MenuManager(int screenWidth, int screenHeight){
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
-		setLayout(new GridBagLayout());
+		setPreferredSize(new Dimension(screenWidth, screenHeight));
 		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
+
+		origin = "BattleCard";
 		
-		JButton battleButton = new JButton("FightBattle");
+		JLayeredPane lPane = new JLayeredPane();
+		lPane.setPreferredSize(new Dimension(screenWidth, screenHeight));
+		
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridBagLayout());
+		buttonPanel.setBounds(500,  400,  300,  500);
+		
+		JButton buttonOne = new JButton("1");
+		buttonOne.setFocusable(false);
+		JButton buttonTwo = new JButton("2");
+		buttonTwo.setFocusable(false);
+		JButton buttonThree = new JButton("3");
+		buttonThree.setFocusable(false);
+		
+		JButton battleButton = new JButton("Fight");
 		battleButton.setFocusable(false);
 		battleButton.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				cM.showCard("BattleCard");
+				cM.showCard(origin);
 			}
 			
 		});
 		
-		Paint display = new Paint();
-		display.setPreferredSize(new Dimension(screenWidth, screenHeight));
-		add(display, c);
-		add(battleButton, c);
+		Paint display = new Paint(); 
+		display.setBounds(0, 0, screenWidth, screenHeight);
+		
+		c.weightx = 1.0;
+		
+		buttonPanel.add(battleButton, c);
+		buttonPanel.add(buttonOne, c);
+		buttonPanel.add(buttonTwo, c);
+		buttonPanel.add(buttonThree, c);
+		
+		
+		lPane.add(display, new Integer(0));
+		lPane.add(buttonPanel, new Integer(1));
+		
+		add(lPane);
+		setVisible(true);
 	}
 
 	public class Paint extends JPanel{
@@ -47,6 +76,10 @@ public class MenuManager extends JPanel{
 			g.setColor(Color.CYAN);
 			g.fillRect(0, 0, screenWidth, screenHeight);
 		}
+	}
+	
+	public void giveOrigin(String newOrigin){
+		origin = newOrigin;
 	}
 	
 	public void giveCardManager(CardManager newCM){

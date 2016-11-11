@@ -73,29 +73,9 @@ public class MapDisplay extends JPanel{
 		mM = new MovementManager(blockages);
 
 
-		//add units for testing purposes
+		//set up the units for testing
+		setUpUnits();
 
-		playerList.get(0).addUnit(new Unit(500, 340, 5, 100, Color.BLACK, 10, 0, 200, 10));
-		playerList.get(0).addUnit(new Unit(430, 270, 5, 200, Color.ORANGE, 10, 1, 500, 10));
-		playerList.get(0).addUnit(new Unit(750, 550, 5, 100, Color.MAGENTA, 10, 2, 200, 10));
-
-		playerList.get(1).addUnit(new Unit(700, 340, 5, 100, Color.RED, 10, 0, 100, 10));
-		playerList.get(1).addUnit(new Unit(715, 340, 5, 100, Color.RED, 10, 0, 100, 10));
-		playerList.get(1).addUnit(new Unit(700, 355, 5, 100, Color.RED, 10, 0, 100, 10));
-		playerList.get(1).addUnit(new Unit(715, 355, 5, 100, Color.RED, 10, 0, 100, 10));
-
-
-		//fill the map library with the required size grids
-		for(Player nextPlayer: playerList){
-			allList.addAll(nextPlayer.getControlledUnits());
-		}
-
-		for(Unit nextUnit: allList){
-			pF.setUpMap(nextUnit.getWidth());
-		}
-
-		//give the units to the movement manager for collision detection
-		mM.addUnitList(allList);
 
 		Paint display = new Paint();
 		display.setPreferredSize(new Dimension(screenWidth - 300, screenHeight));
@@ -152,6 +132,44 @@ public class MapDisplay extends JPanel{
 
 		runTimer.start();
 		gamePaused = false;
+	}
+
+	public void setUpUnits(){
+
+		playerList.get(0).getControlledUnits().clear();
+		playerList.get(1).getControlledUnits().clear();
+		//add units for testing purposes
+
+		playerList.get(0).addUnit(new Unit(500, 340, 5, 100, Color.BLACK, 10, 0, 200, 10));
+		playerList.get(0).addUnit(new Unit(430, 270, 5, 200, Color.ORANGE, 10, 1, 500, 10));
+		playerList.get(0).addUnit(new Unit(750, 550, 5, 100, Color.MAGENTA, 10, 2, 200, 10));
+
+		playerList.get(1).addUnit(new Unit(700, 340, 5, 100, Color.RED, 10, 0, 100, 10));
+		playerList.get(1).addUnit(new Unit(715, 340, 5, 100, Color.RED, 10, 0, 100, 10));
+		playerList.get(1).addUnit(new Unit(700, 355, 5, 100, Color.RED, 10, 0, 100, 10));
+		playerList.get(1).addUnit(new Unit(715, 355, 5, 100, Color.RED, 10, 0, 100, 10));
+
+
+		//fill the map library with the required size grids
+		allList.clear();
+		for(Player nextPlayer: playerList){
+			allList.addAll(nextPlayer.getControlledUnits());
+		}
+
+		for(Unit nextUnit: allList){
+			pF.setUpMap(nextUnit.getWidth());
+		}
+
+		mM.emptyUnitList();
+
+		//give the units to the movement manager for collision detection
+		mM.addUnitList(allList);
+
+		selectedList.clear();
+		if(informationPanel != null){
+			informationPanel.updateSelectedUnits(selectedList);
+		}
+		repaint();
 	}
 
 	public class Paint extends JPanel{

@@ -28,6 +28,9 @@ public class MovementManager {
 	public void addUnitList(ArrayList<Unit> newListToAdd){
 		unitList.addAll(newListToAdd);
 	}
+	public void emptyUnitList(){
+		unitList.clear();
+	}
 	public void removeUnit(Unit toRemove){
 		for(int i = 0; i < unitList.size(); i ++){
 			if(unitList.get(i) == toRemove){

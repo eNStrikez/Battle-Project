@@ -30,6 +30,7 @@ public class Core{
 		CardManager cM = new CardManager(battlePanel, menuPanel, screenWidth, screenHeight);
 		
 		menuPanel.giveCardManager(cM);
+		iP.giveCardManager(cM);
 
 		FrameManager fM = new FrameManager(screenWidth, screenHeight, eM, cM, menuPanel);
 		
