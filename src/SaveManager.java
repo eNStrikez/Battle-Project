@@ -15,7 +15,7 @@ public class SaveManager {
 	public Obstruction[][] loadBlockages(String mapName){
 		Obstruction[][] loadedObstructions = null;
 		try {
-			ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(new File(mapName)));
+			ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(mapName));
 			try {
 				loadedObstructions = (Obstruction[][]) inputStream.readObject();
 			} catch (ClassNotFoundException e) {
@@ -33,7 +33,7 @@ public class SaveManager {
 	public void saveBlockages(String mapName, Obstruction[][] toSave) throws ClassNotFoundException{
 		
 		try {
-			ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("U:/Years/Year 10/Battle Prototype 2 Dykstras/" + mapName));
+			ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("U:/Years/Year 10/Deadly Dave/Battle Prototype 2 With 2D Array/" + mapName));
 			System.out.println("Start save");
 			outputStream.writeObject(toSave);
 			System.out.println("End Save");
