@@ -31,8 +31,17 @@ public class MenuManager extends JPanel{
 		buttonPanel.setLayout(new GridBagLayout());
 		buttonPanel.setBounds(screenWidth/2 - 150,  screenHeight/2 - 200,  300,  400);
 		
-		JButton buttonOne = new JButton("1");
-		buttonOne.setFocusable(false);
+		JButton mapMakerButton = new JButton("Map Maker");
+		mapMakerButton.setFocusable(false);
+		mapMakerButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				cM.showCard("MenuCard", "MapMakerCard");
+			}
+			
+		});
+		
 		JButton exitButton = new JButton("Exit To Desktop");
 		exitButton.setFocusable(false);
 		exitButton.addActionListener(new ActionListener(){
@@ -78,7 +87,7 @@ public class MenuManager extends JPanel{
 		c.gridwidth = 1;
 		buttonPanel.add(battleButton, c);
 		c.gridy = 1;
-		buttonPanel.add(buttonOne, c);
+		buttonPanel.add(mapMakerButton, c);
 		c.gridy = 2;
 		buttonPanel.add(overworldButton, c);
 		c.gridy = 3;

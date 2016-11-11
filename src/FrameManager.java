@@ -16,8 +16,9 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 	CardManager cM;
 	OverworldManager oM;
 	MenuManager menuPanel;
+	MMPanelManager mManager;
 
-	public FrameManager(int screenWidth, int screenHeight, EventManager eM, CardManager cM, MenuManager menuPanel, OverworldManager oM){
+	public FrameManager(int screenWidth, int screenHeight, EventManager eM, CardManager cM, MenuManager menuPanel, OverworldManager oM, MMPanelManager mManager){
 		frame = new JFrame();
 		frame.setSize(new Dimension(screenWidth, screenHeight));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -27,6 +28,7 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 		this.cM = cM;
 		this.menuPanel = menuPanel;
 		this.oM = oM;
+		this.mManager = mManager;
 
 		frame.addMouseListener(this);
 		frame.addMouseMotionListener(this);
@@ -46,6 +48,9 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 			break;
 		case "OverCard":
 			oM.keyPressed(event);
+			break;
+		case "MapMakerCard":
+			mManager.keyPressed(event);
 			break;
 		default:
 			break;
