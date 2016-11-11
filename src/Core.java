@@ -18,6 +18,7 @@ public class Core{
 		EventManager eM = new EventManager(mD);
 		InfoPanel iP = new InfoPanel(300, screenHeight, eM);
 		
+		
 		JPanel battlePanel = new JPanel();
 		battlePanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -26,13 +27,16 @@ public class Core{
 		battlePanel.add(mD, c);
 		battlePanel.add(iP, c);
 
+		OverworldManager oM = new OverworldManager(mD, screenWidth, screenHeight);
+
 		MenuManager menuPanel = new MenuManager(screenWidth, screenHeight);
-		CardManager cM = new CardManager(battlePanel, menuPanel, screenWidth, screenHeight);
+		CardManager cM = new CardManager(battlePanel, menuPanel, screenWidth, screenHeight, oM);
 		
 		menuPanel.giveCardManager(cM);
+		oM.giveCardManager(cM);
 		iP.giveCardManager(cM);
 
-		FrameManager fM = new FrameManager(screenWidth, screenHeight, eM, cM, menuPanel);
+		FrameManager fM = new FrameManager(screenWidth, screenHeight, eM, cM, menuPanel, oM);
 		
 		
 		mD.giveInfoPanel(iP);

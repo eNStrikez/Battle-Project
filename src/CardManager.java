@@ -7,8 +7,9 @@ import javax.swing.JPanel;
 public class CardManager extends JPanel{
 	CardLayout cl;
 	String currentCard;
+	String origin;
 	
-	public CardManager(JPanel battleCard, JPanel menuCard, int screenWidth, int screenHeight){
+	public CardManager(JPanel battleCard, JPanel menuCard, int screenWidth, int screenHeight, JPanel overWorldPanel){
 		cl = new CardLayout();
 		
 		setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -16,7 +17,7 @@ public class CardManager extends JPanel{
 		setLayout(cl);
 		
 		add(battleCard, "BattleCard");
-		//deck.add(overCard, "OverCard");
+		add(overWorldPanel, "OverCard");
 		add(menuCard, "MenuCard");
 		
 		cl.show(this, "MenuCard");
@@ -24,9 +25,14 @@ public class CardManager extends JPanel{
 		
 	}
 	
-	public void showCard(String cardName){
+	public void showCard(String newOrigin, String cardName){
+		origin = newOrigin;
 		cl.show(this, cardName);
 		currentCard = cardName;
+	}
+	public void returnToOrigional(){
+		cl.show(this, origin);
+		currentCard = origin;
 	}
 	public String getCurrentCard(){
 		return currentCard;

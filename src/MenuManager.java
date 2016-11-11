@@ -17,29 +17,43 @@ public class MenuManager extends JPanel{
 	int screenWidth;
 	int screenHeight;
 	CardManager cM;
-	String origin;
 
 	public MenuManager(int screenWidth, int screenHeight){
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 		setPreferredSize(new Dimension(screenWidth, screenHeight));
 		GridBagConstraints c = new GridBagConstraints();
-
-		origin = "BattleCard";
 		
 		JLayeredPane lPane = new JLayeredPane();
 		lPane.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
-		buttonPanel.setBounds(500,  400,  300,  500);
+		buttonPanel.setBounds(screenWidth/2 - 150,  screenHeight/2 - 200,  300,  400);
 		
 		JButton buttonOne = new JButton("1");
 		buttonOne.setFocusable(false);
-		JButton buttonTwo = new JButton("2");
-		buttonTwo.setFocusable(false);
-		JButton buttonThree = new JButton("3");
-		buttonThree.setFocusable(false);
+		JButton exitButton = new JButton("Exit To Desktop");
+		exitButton.setFocusable(false);
+		exitButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				System.exit(1);
+			}
+			
+		});
+		
+		JButton overworldButton = new JButton("View Overworld");
+		overworldButton.setFocusable(false);
+		overworldButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				cM.showCard("MenuCard", "OverCard");
+			}
+			
+		});
 		
 		JButton battleButton = new JButton("Fight");
 		battleButton.setFocusable(false);
@@ -47,7 +61,7 @@ public class MenuManager extends JPanel{
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				cM.showCard(origin);
+				cM.showCard("MenuCard", "BattleCard");
 			}
 			
 		});
@@ -55,12 +69,20 @@ public class MenuManager extends JPanel{
 		Paint display = new Paint(); 
 		display.setBounds(0, 0, screenWidth, screenHeight);
 		
+		c.fill =  GridBagConstraints.BOTH;
 		c.weightx = 1.0;
+		c.weighty = 1.0;
 		
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
 		buttonPanel.add(battleButton, c);
+		c.gridy = 1;
 		buttonPanel.add(buttonOne, c);
-		buttonPanel.add(buttonTwo, c);
-		buttonPanel.add(buttonThree, c);
+		c.gridy = 2;
+		buttonPanel.add(overworldButton, c);
+		c.gridy = 3;
+		buttonPanel.add(exitButton, c);
 		
 		
 		lPane.add(display, new Integer(0));
@@ -73,13 +95,9 @@ public class MenuManager extends JPanel{
 	public class Paint extends JPanel{
 		public void paintComponent(Graphics gr){
 			Graphics2D g = (Graphics2D) gr;
-			g.setColor(Color.CYAN);
+			g.setColor(Color.GRAY);
 			g.fillRect(0, 0, screenWidth, screenHeight);
 		}
-	}
-	
-	public void giveOrigin(String newOrigin){
-		origin = newOrigin;
 	}
 	
 	public void giveCardManager(CardManager newCM){
@@ -88,9 +106,6 @@ public class MenuManager extends JPanel{
 
 	public void keyPressed(KeyEvent event){
 		switch(event.getKeyCode()){
-		case KeyEvent.VK_ESCAPE:
-			System.exit(1);
-			break;
 		default:
 			break;
 		}
