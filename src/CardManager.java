@@ -9,7 +9,7 @@ public class CardManager extends JPanel{
 	String currentCard;
 	String origin;
 	
-	public CardManager(JPanel battleCard, JPanel menuCard, int screenWidth, int screenHeight, JPanel overWorldPanel, MMPanelManager mMManager){
+	public CardManager(JPanel battleCard, JPanel menuCard, int screenWidth, int screenHeight, JPanel overWorldPanel, MMPanelManager mMManager, SettlementManager sManager){
 		cl = new CardLayout();
 		
 		setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -20,6 +20,7 @@ public class CardManager extends JPanel{
 		add(overWorldPanel, "OverCard");
 		add(menuCard, "MenuCard");
 		add(mMManager, "MapMakerCard");
+		add(sManager, "SettlementManager");
 		
 		cl.show(this, "MenuCard");
 		currentCard = "MenuCard";

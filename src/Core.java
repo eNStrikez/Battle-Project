@@ -38,14 +38,17 @@ public class Core{
 		MMEventManager eManager = new MMEventManager(cUI, MManager);
 		MManager.giveEManager(eManager);
 		cUI.giveEManager(eManager);
+		
+		SettlementManager sManager  = new SettlementManager(screenWidth, screenHeight);
 
 
-		CardManager cM = new CardManager(battlePanel, menuPanel, screenWidth, screenHeight, oM, MManager);
+		CardManager cM = new CardManager(battlePanel, menuPanel, screenWidth, screenHeight, oM, MManager, sManager);
 
 		menuPanel.giveCardManager(cM);
 		oM.giveCardManager(cM);
 		iP.giveCardManager(cM);
 		MManager.giveCardManager(cM);
+		sManager.giveCardManager(cM);
 
 
 
