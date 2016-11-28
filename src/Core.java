@@ -53,7 +53,7 @@ public class Core{
 
 
 
-		FrameManager fM = new FrameManager(screenWidth, screenHeight, eM, cM, menuPanel, oM, MManager);
+		FrameManager fM = new FrameManager(screenWidth, screenHeight, eM, cM, menuPanel, oM, MManager, sManager);
 
 
 		mD.giveInfoPanel(iP);

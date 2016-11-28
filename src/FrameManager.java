@@ -15,10 +15,11 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 	EventManager eM;
 	CardManager cM;
 	OverworldManager oM;
+	SettlementManager sM;
 	MenuManager menuPanel;
 	MMPanelManager mManager;
 
-	public FrameManager(int screenWidth, int screenHeight, EventManager eM, CardManager cM, MenuManager menuPanel, OverworldManager oM, MMPanelManager mManager){
+	public FrameManager(int screenWidth, int screenHeight, EventManager eM, CardManager cM, MenuManager menuPanel, OverworldManager oM, MMPanelManager mManager, SettlementManager sM){
 		frame = new JFrame();
 		frame.setSize(new Dimension(screenWidth, screenHeight));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,13 +30,15 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 		this.menuPanel = menuPanel;
 		this.oM = oM;
 		this.mManager = mManager;
+		this.sM =sM;
+
+
+		frame.add(cM);
 
 		frame.addMouseListener(this);
 		frame.addMouseMotionListener(this);
 		frame.addKeyListener(this);
 		frame.setUndecorated(true);
-
-		frame.add(cM);
 
 		frame.setVisible(true);
 	}
@@ -52,6 +55,8 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 		case "MapMakerCard":
 			mManager.keyPressed(event);
 			break;
+		case "SettlementManager":
+			sM.keyPressed(event);
 		default:
 			break;
 		}
@@ -76,6 +81,9 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 		case "BattleCard":
 			eM.mouseDragged(event);
 			break;
+		case "SettlementManager":
+			sM.mouseDragged(event);
+			break;
 		default:
 			break;
 		}
@@ -84,7 +92,13 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 
 	@Override
 	public void mouseMoved(MouseEvent event) {
-
+		switch(cM.getCurrentCard()){
+		case "SettlementManager":
+			sM.mouseMoved(event);
+			break;
+		default:
+			break;
+		}
 
 	}
 
@@ -93,6 +107,9 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 		switch(cM.getCurrentCard()){
 		case "BattleCard":
 			eM.mouseDragged(event);
+			break;
+		case "SettlementManager":
+			sM.mouseClicked(event);
 			break;
 		default:
 			break;
