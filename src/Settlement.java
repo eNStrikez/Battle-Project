@@ -9,6 +9,7 @@ public class Settlement {
 	int y;
 	SettlementGridSpace[][] gridArray;
 	ArrayList<Building> placedBuildings;
+	int overallProffit;
 	
 	public Settlement(int x, int y, int gridSize){
 		avalibleBuildings = new ArrayList<Building>();
@@ -32,7 +33,7 @@ public class Settlement {
 		blocks1.add(new int[] {0, 0});
 		blocks1.add(new int[] {0, 1});
 		blocks1.add(new int[] {1, 0});
-		avalibleBuildings.add(new Building("blueprint", blocks1, block1Color));
+		avalibleBuildings.add(new Building("blueprint", blocks1, block1Color, -5, 20));
 		
 		Color block2Color = Color.MAGENTA;
 		ArrayList<int[]> blocks2 = new ArrayList<int[]>();
@@ -40,12 +41,23 @@ public class Settlement {
 		blocks2.add(new int[] {-1, 0});
 		blocks2.add(new int[] {0, 0});
 		blocks2.add(new int[] {1, 0});
-		avalibleBuildings.add(new Building("blueprint2", blocks2, block2Color));
+		avalibleBuildings.add(new Building("blueprint2", blocks2, block2Color, -10, 40));
 		
 	}
 	
 	public int getGridSize(){
 		return gridSize;
+	}
+	public void updateProffit(){
+		overallProffit = 0;
+		for(int i = 0; i < placedBuildings.size(); i ++){
+			overallProffit += placedBuildings.get(i).getCost();
+		}
+	}
+	
+	public int getProffit(){
+		updateProffit();
+		return overallProffit;
 	}
 	public SettlementGridSpace[][] getGrid(){
 		return gridArray;

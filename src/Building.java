@@ -10,12 +10,16 @@ public class Building implements Cloneable{
 	ArrayList<int[]> size;
 	Color color;
 	int placedIndex;
+	int cost;
+	int identifier;
 	
-	public Building(String name, ArrayList<int[]> size, Color color){
+	public Building(String name, ArrayList<int[]> size, Color color, int cost, int identifier){
 		this.name = name;
 		this.size = size;
 		this.color = color;
 		placedIndex = 0;
+		this.cost = cost;
+		this.identifier = identifier;
 	}
 	
 	public Building(Building copyBuilding){
@@ -23,6 +27,10 @@ public class Building implements Cloneable{
 		color = copyBuilding.getColor();
 		placedIndex = copyBuilding.getPlacedIndex();
 		size = new ArrayList<int[]>(copyBuilding.getTakenBlocks());
+	}
+	
+	public int getCost(){
+		return cost;
 	}
 	
 	public String getName(){
