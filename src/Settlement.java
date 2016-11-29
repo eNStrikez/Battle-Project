@@ -8,6 +8,7 @@ public class Settlement {
 	int x;
 	int y;
 	SettlementGridSpace[][] gridArray;
+	ArrayList<Building> placedBuildings;
 	
 	public Settlement(int x, int y, int gridSize){
 		avalibleBuildings = new ArrayList<Building>();
@@ -15,6 +16,7 @@ public class Settlement {
 		this.x = x;
 		this.y = y;
 		
+		placedBuildings = new ArrayList<Building>();
 		gridArray = new SettlementGridSpace[gridSize][gridSize];
 		
 		for(int xCount = 0; xCount < gridSize; xCount ++){
@@ -59,5 +61,8 @@ public class Settlement {
 	}
 	public ArrayList<Building> getBuildings(){
 		return avalibleBuildings;
+	}
+	public ArrayList<Building> getPlacedBuildings(){
+		return placedBuildings;
 	}
 }

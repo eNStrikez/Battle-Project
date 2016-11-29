@@ -17,11 +17,12 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 
-public class SettlementManager extends JPanel{
+public class SettlementManager extends JPanel implements Cloneable{
 	int screenWidth;
 	int screenHeight;
 	Settlement currentSettlement;
 	ArrayList<Building> currentBuildingList;
+	ArrayList<Building> placedBuildingList;
 	CardManager cM;
 	ArrayList<Settlement> settlementList;
 	int displacement;
@@ -33,13 +34,20 @@ public class SettlementManager extends JPanel{
 	JButton buildingFour;
 	JButton buildingFive;
 	Image defaultImage;
+	
+	JButton removeButton;
 
 	Image currentImage;
+	Building currentBuilding;
+	Building selectedBuilding;
 	ArrayList<int[]> currentBuildingSize;
+	ArrayList<int[]> selectedList;
 	Color currentBuildingColor;
 
 	int mouseX;
 	int mouseY;
+
+	int indexCount;
 
 	int mouseGridX;
 	int mouseGridY;
@@ -48,18 +56,23 @@ public class SettlementManager extends JPanel{
 	SettlementGridSpace[][] settlementGrid;
 
 	Boolean clearToPlace;
+	Boolean removing;
 
 	public SettlementManager(int screenWidth, int screenHeight){
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 
 		clearToPlace = false;
+		removing = false;
+
+		selectedList = new ArrayList<int[]>();
 
 		settlementList = new ArrayList<Settlement>();
 		settlementList.add(new Settlement(10, 10, 10));
 
 		currentSettlement = settlementList.get(0);
 		currentBuildingList = currentSettlement.getBuildings();
+		placedBuildingList = currentSettlement.getPlacedBuildings();
 		defaultImage = new ImageIcon("default.jpg").getImage().getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
 
 		setLayout(new GridBagLayout());
@@ -81,11 +94,27 @@ public class SettlementManager extends JPanel{
 			}
 
 		});
+		removeButton = new JButton("Remove Buildings");
+		removeButton.setFocusable(false);
+		removeButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				removing = !removing;
+				if(removing){
+					removeButton.setText("Place Buildings");
+				} else {
+					removeButton.setText("Remove Buildings");
+				}
+			}
+
+		});
 
 		JPanel informationPanel = new JPanel();
 		informationPanel.setPreferredSize(new Dimension(screenWidth, 200));
-		informationPanel.setLayout(new GridBagLayout());
-		informationPanel.add(returnButton, c);
+		informationPanel.setLayout(new GridLayout(0,2));
+		informationPanel.add(returnButton);
+		informationPanel.add(removeButton);
 
 		GridPaint display = new GridPaint();
 		display.setPreferredSize(new Dimension(screenWidth - 500, screenHeight - 200));
@@ -121,6 +150,7 @@ public class SettlementManager extends JPanel{
 					currentImage = currentBuildingList.get(0 + displacement).getImage();
 					currentBuildingSize = currentBuildingList.get(0 + displacement).getTakenBlocks();
 					currentBuildingColor = currentBuildingList.get(0 + displacement).getColor();
+					currentBuilding = currentBuildingList.get(0 + displacement);
 				}
 			}
 
@@ -136,6 +166,7 @@ public class SettlementManager extends JPanel{
 					currentImage = currentBuildingList.get(1 + displacement).getImage();
 					currentBuildingSize = currentBuildingList.get(1 + displacement).getTakenBlocks();
 					currentBuildingColor = currentBuildingList.get(1 + displacement).getColor();
+					currentBuilding = currentBuildingList.get(1 + displacement);
 				}
 			}
 
@@ -150,6 +181,7 @@ public class SettlementManager extends JPanel{
 					currentImage = currentBuildingList.get(2 + displacement).getImage();
 					currentBuildingSize = currentBuildingList.get(2 + displacement).getTakenBlocks();
 					currentBuildingColor = currentBuildingList.get(2 + displacement).getColor();
+					currentBuilding = currentBuildingList.get(2 + displacement);
 				}
 			}
 
@@ -165,6 +197,7 @@ public class SettlementManager extends JPanel{
 					currentImage = currentBuildingList.get(3 + displacement).getImage();
 					currentBuildingSize = currentBuildingList.get(3 + displacement).getTakenBlocks();
 					currentBuildingColor = currentBuildingList.get(3 + displacement).getColor();
+					currentBuilding = currentBuildingList.get(3 + displacement);
 				}
 			}
 
@@ -180,6 +213,7 @@ public class SettlementManager extends JPanel{
 					currentImage = currentBuildingList.get(4 + displacement).getImage();
 					currentBuildingSize = currentBuildingList.get(4 + displacement).getTakenBlocks();
 					currentBuildingColor = currentBuildingList.get(4 + displacement).getColor();
+					currentBuilding = currentBuildingList.get(4 + displacement);
 				}
 			}
 
@@ -261,12 +295,16 @@ public class SettlementManager extends JPanel{
 		giveMouseX(event.getX());
 		giveMouseY(event.getY());
 
-		updateSettlementGrid();
+		if(!removing){
+			updateSettlementGridPlace();
+		} else {
+			updateSettlementGridRemove();
+		}
 
 		repaint();
 	}
 
-	public void updateSettlementGrid(){
+	public void updateSettlementGridPlace(){
 		if(currentBuildingSize != null){
 			clearShadowPlacement();
 			clearToPlace = true;
@@ -288,6 +326,42 @@ public class SettlementManager extends JPanel{
 				}
 			}
 		}
+	}
+
+	public void updateSettlementGridRemove(){
+		clearShadowPlacement();
+		selectedList.clear();
+		if(mouseGridX > -1 && mouseGridX < settlementGrid.length && mouseGridY > -1 && mouseGridY < settlementGrid.length){
+			int placeBuildingID = settlementGrid[mouseGridX][mouseGridY].getPlacedBuildingID();
+
+			for(int i = 0; i < placedBuildingList.size(); i ++){
+				if(placedBuildingList.get(i).getPlacedIndex() == placeBuildingID){
+
+					//colour and select the blocks to remove
+					for(int xCount = 0; xCount < settlementGrid.length; xCount ++){
+						for(int yCount = 0; yCount < settlementGrid.length; yCount ++){
+							if(settlementGrid[xCount][yCount].getPlacedBuildingID() == placeBuildingID){
+								settlementGrid[xCount][yCount].setValue(3);
+								selectedList.add(new int[] {xCount, yCount});
+							}
+						}
+					}
+					selectedBuilding = placedBuildingList.get(i);
+					break;
+				}
+			}
+		}
+	}
+
+	public void removeSelected(){
+		for(int i = 0; i < selectedList.size(); i ++){
+			int xRef = selectedList.get(i)[0];
+			int yRef = selectedList.get(i)[1];
+			settlementGrid[xRef][yRef].setValue(0);
+			settlementGrid[xRef][yRef].setBuildingID(-1);
+		}
+		selectedList.clear();
+		placedBuildingList.remove(selectedBuilding);
 	}
 
 	public void clearShadowPlacement(){
@@ -314,38 +388,62 @@ public class SettlementManager extends JPanel{
 				toRotate.get(i)[1] = toRotate.get(i)[0];
 				toRotate.get(i)[0] = (holder * -1);
 			}
-			updateSettlementGrid();
+			updateSettlementGridPlace();
 			repaint();
 		}
 	}
 
 	public void giveMouseX(int newX){
+
 		mouseX = newX;
 		mouseGridX = Math.floorDiv(mouseX - 50, gapWidth);
 	}
+
 	public void giveMouseY(int newY){
+
 		mouseY = newY;
 		mouseGridY = Math.floorDiv(mouseY - 50, gapWidth);
 	}
+
 	public void mouseClicked(MouseEvent event){
-		if(clearToPlace){
+
+		if(clearToPlace && !removing){
+			currentBuilding.setPlacedIndex(indexCount);
+
+			placedBuildingList.add(new Building(currentBuilding));
+
 			for(int i = 0; i < currentBuildingSize.size(); i ++){
 				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setValue(1);
 				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setColor(currentBuildingColor);
+				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setBuildingID(indexCount);
 			}
+			updateSettlementGridPlace();
+			indexCount ++;
+		} else if(removing){
+			removeSelected();
 		}
-		updateSettlementGrid();
 		repaint();
 	}
+
 	public void mouseDragged(MouseEvent event){
-		if(clearToPlace){
+		if(clearToPlace && !removing){
+			currentBuilding.setPlacedIndex(indexCount);
+
+			placedBuildingList.add(new Building(currentBuilding));
+
 			for(int i = 0; i < currentBuildingSize.size(); i ++){
 				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setValue(1);
+				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setColor(currentBuildingColor);
+				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setBuildingID(indexCount);
 			}
+			updateSettlementGridPlace();
+			indexCount ++;
+		} else if(removing){
+			removeSelected();
 		}
-		updateSettlementGrid();
 		repaint();
 	}
+
 	public void keyPressed(KeyEvent event){
 		switch(event.getKeyCode()){
 		case KeyEvent.VK_R:
