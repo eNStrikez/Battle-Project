@@ -1,10 +1,12 @@
 import java.awt.Color;
+import java.awt.Image;
 
 
 public class SettlementGridSpace {
 	int value;
 	Color color;
 	int placedBuildingID;
+	Image image;
 	
 	public SettlementGridSpace(int value, Color color){
 		this.value = value;
@@ -22,8 +24,16 @@ public class SettlementGridSpace {
 	public void setColor(Color newColor){
 		color = newColor;
 	}
+	public void setImage(Image newImage){
+		image = newImage;
+	}
+	
+	
 	public Color getColor(){
 		return color;
+	}
+	public Image getPlacedImage(){
+		return image;
 	}
 	
 	public void setBuildingID(int newID){

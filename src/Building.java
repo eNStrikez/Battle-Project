@@ -45,6 +45,9 @@ public class Building implements Cloneable{
 	public Color getColor(){
 		return color;
 	}
+	public Image getPlacedImage(){
+		return new ImageIcon(name + "Placed.jpg").getImage().getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+	}
 	public int getPlacedIndex(){
 		return placedIndex;
 	}

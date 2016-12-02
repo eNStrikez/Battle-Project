@@ -46,11 +46,7 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 		brushColor = Color.BLACK;
 
 		obstructionMap = new Obstruction[100][100];
-		for(int x = 0; x < 100; x ++){
-			for(int y = 0; y < 100; y ++){
-				obstructionMap[x][y] = new Obstruction(x * 10, y * 10, 10, 10, Color.GRAY, 1, 0);
-			}
-		}
+		resetMap();
 		selectedObstruction = new Obstruction(0, 0, 10, 10, Color.GRAY, 1, 0);
 	}
 	
@@ -104,7 +100,17 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 	}
 	public void setObstructionMap(Obstruction[][] loadObstructionMap){
 		obstructionMap = loadObstructionMap;
-
+	}
+	public void emptyMap(){
+		resetMap();
+		repaint();
+	}
+	public void resetMap(){
+		for(int x = 0; x < 100; x ++){
+			for(int y = 0; y < 100; y ++){
+				obstructionMap[x][y] = new Obstruction(x * 10, y * 10, 10, 10, Color.GRAY, 1, 0);
+			}
+		}
 	}
 
 	public class Paint extends JPanel{

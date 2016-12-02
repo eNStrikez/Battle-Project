@@ -73,6 +73,10 @@ public class MMPanelManager extends JPanel{
 				cUI.setObstructionMap(sM.loadObstructionMap(file));
 			}
 			repaint();
+			break;
+		case KeyEvent.VK_C:
+			cUI.emptyMap();
+			break;
 		default:
 			break;
 		}

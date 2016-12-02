@@ -43,6 +43,7 @@ public class SettlementManager extends JPanel implements Cloneable{
 	ArrayList<int[]> currentBuildingSize;
 	ArrayList<int[]> selectedList;
 	Color currentBuildingColor;
+	Image currentBuildingPlacedImage;
 
 	int mouseX;
 	int mouseY;
@@ -147,10 +148,7 @@ public class SettlementManager extends JPanel implements Cloneable{
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				if(currentBuildingList.size() > 0){
-					currentImage = currentBuildingList.get(0 + displacement).getImage();
-					currentBuildingSize = currentBuildingList.get(0 + displacement).getTakenBlocks();
-					currentBuildingColor = currentBuildingList.get(0 + displacement).getColor();
-					currentBuilding = currentBuildingList.get(0 + displacement);
+					getBuildingAtButton(0);
 				}
 			}
 
@@ -163,10 +161,7 @@ public class SettlementManager extends JPanel implements Cloneable{
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				if(currentBuildingList.size() > 1){
-					currentImage = currentBuildingList.get(1 + displacement).getImage();
-					currentBuildingSize = currentBuildingList.get(1 + displacement).getTakenBlocks();
-					currentBuildingColor = currentBuildingList.get(1 + displacement).getColor();
-					currentBuilding = currentBuildingList.get(1 + displacement);
+					getBuildingAtButton(1);
 				}
 			}
 
@@ -178,10 +173,7 @@ public class SettlementManager extends JPanel implements Cloneable{
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				if(currentBuildingList.size() > 2){
-					currentImage = currentBuildingList.get(2 + displacement).getImage();
-					currentBuildingSize = currentBuildingList.get(2 + displacement).getTakenBlocks();
-					currentBuildingColor = currentBuildingList.get(2 + displacement).getColor();
-					currentBuilding = currentBuildingList.get(2 + displacement);
+					getBuildingAtButton(2);
 				}
 			}
 
@@ -194,10 +186,7 @@ public class SettlementManager extends JPanel implements Cloneable{
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				if(currentBuildingList.size() > 3){
-					currentImage = currentBuildingList.get(3 + displacement).getImage();
-					currentBuildingSize = currentBuildingList.get(3 + displacement).getTakenBlocks();
-					currentBuildingColor = currentBuildingList.get(3 + displacement).getColor();
-					currentBuilding = currentBuildingList.get(3 + displacement);
+					getBuildingAtButton(3);
 				}
 			}
 
@@ -210,10 +199,7 @@ public class SettlementManager extends JPanel implements Cloneable{
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				if(currentBuildingList.size() > 4){
-					currentImage = currentBuildingList.get(4 + displacement).getImage();
-					currentBuildingSize = currentBuildingList.get(4 + displacement).getTakenBlocks();
-					currentBuildingColor = currentBuildingList.get(4 + displacement).getColor();
-					currentBuilding = currentBuildingList.get(4 + displacement);
+					getBuildingAtButton(4);
 				}
 			}
 
@@ -253,6 +239,14 @@ public class SettlementManager extends JPanel implements Cloneable{
 		c.gridx = 0;
 		c.gridwidth = 2;
 		add(informationPanel, c);
+	}
+	
+	public void getBuildingAtButton(int buttonNumber){
+		currentImage = currentBuildingList.get(buttonNumber + displacement).getImage();
+		currentBuildingSize = currentBuildingList.get(buttonNumber + displacement).getTakenBlocks();
+		currentBuildingColor = currentBuildingList.get(buttonNumber + displacement).getColor();
+		currentBuildingPlacedImage = currentBuildingList.get(buttonNumber + displacement).getPlacedImage();
+		currentBuilding = currentBuildingList.get(buttonNumber + displacement);
 	}
 
 	public void updateButtonDisplay(){
@@ -415,6 +409,7 @@ public class SettlementManager extends JPanel implements Cloneable{
 			for(int i = 0; i < currentBuildingSize.size(); i ++){
 				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setValue(1);
 				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setColor(currentBuildingColor);
+				//settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setImage(currentBuildingPlacedImage);
 				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setBuildingID(indexCount);
 			}
 			updateSettlementGridPlace();
@@ -434,6 +429,7 @@ public class SettlementManager extends JPanel implements Cloneable{
 			for(int i = 0; i < currentBuildingSize.size(); i ++){
 				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setValue(1);
 				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setColor(currentBuildingColor);
+				//settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setImage(currentBuildingPlacedImage);
 				settlementGrid[mouseGridX + currentBuildingSize.get(i)[0]][mouseGridY + currentBuildingSize.get(i)[1]].setBuildingID(indexCount);
 			}
 			updateSettlementGridPlace();
@@ -479,6 +475,8 @@ public class SettlementManager extends JPanel implements Cloneable{
 					case 1:
 						g.setColor(settlementGrid[countX][countY].getColor());
 						g.fillRect(51 + countX*gapWidth, 51 + countY*gapWidth, gapWidth - 1, gapWidth - 1);
+			
+						//g.drawImage(settlementGrid[countX][countY].getPlacedImage(), 51 + countX*gapWidth, 51 + countY*gapWidth, gapWidth - 1, gapWidth - 1, null);
 						break;
 					case 2:
 						g.setColor(Color.YELLOW);
