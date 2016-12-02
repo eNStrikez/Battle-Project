@@ -27,6 +27,9 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 	Obstruction[][] obstructionMap;
 	Obstruction selectedObstruction;
 	MMEventManager eM;
+	
+	int gridSize;
+	int squareSize;
 
 
 	public MMCanvasUI(){
@@ -44,10 +47,23 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		brushColor = Color.BLACK;
+		
+		gridSize = 100;
+		squareSize = 10;
 
-		obstructionMap = new Obstruction[100][100];
+		obstructionMap = new Obstruction[gridSize][gridSize];
 		resetMap();
-		selectedObstruction = new Obstruction(0, 0, 10, 10, Color.GRAY, 1, 0);
+		selectedObstruction = new Obstruction(0, 0, squareSize, squareSize, Color.GRAY, 1, 0);
+	}
+	
+	public void changeGridSize(int newSize){
+		obstructionMap = new Obstruction[newSize][newSize];
+		gridSize = newSize;
+		
+		squareSize = 1000 / gridSize;
+		eM.updatePanel(roughness, brushColor, tileType, squareSize);
+		resetMap();
+		repaint();
 	}
 	
 	public void giveEManager(MMEventManager eManager){
@@ -57,8 +73,8 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 	public void createNewObstruction(int cX, int cY){
 		for(int sizeX = 0; sizeX < brushWidth; sizeX ++){
 			for(int sizeY = 0; sizeY < brushHeight; sizeY ++){
-				if(cX + sizeX < 100 && cX + sizeX > -1 && cY + sizeY < 100 && cY + sizeY > -1){
-					obstructionMap[cX + sizeX][cY  +sizeY] = new Obstruction((cX + sizeX) * 10, (cY + sizeY) * 10, 10, 10, brushColor, roughness, tileType);
+				if(cX + sizeX < gridSize && cX + sizeX > -1 && cY + sizeY < gridSize && cY + sizeY > -1){
+					obstructionMap[cX + sizeX][cY  +sizeY] = new Obstruction((cX + sizeX) * squareSize, (cY + sizeY) * squareSize, squareSize, squareSize, brushColor, roughness, tileType);
 				}
 			}
 		}
@@ -68,12 +84,12 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 		roughness = obstructionMap[cX][cY].getRoughness();
 		brushColor = obstructionMap[cX][cY].getColor();
 		tileType = obstructionMap[cX][cY].getTileType();
-		eM.updatePanel(roughness, brushColor, tileType);
+		eM.updatePanel(roughness, brushColor, tileType, squareSize);
 	}
 	public void removeObstruction(int cX, int cY){
 		for(int sizeX = 0; sizeX < brushWidth; sizeX ++){
 			for(int sizeY = 0; sizeY < brushHeight; sizeY ++){
-				obstructionMap[cX + sizeX][cY  +sizeY] = new Obstruction((cX + sizeX) * 10, (cY + sizeY) * 10, 10, 10, Color.GRAY, 1, 0);
+				obstructionMap[cX + sizeX][cY  +sizeY] = new Obstruction((cX + sizeX) * squareSize, (cY + sizeY) * squareSize, squareSize, squareSize, Color.GRAY, 1, 0);
 			}
 		}
 	}
@@ -106,9 +122,9 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 		repaint();
 	}
 	public void resetMap(){
-		for(int x = 0; x < 100; x ++){
-			for(int y = 0; y < 100; y ++){
-				obstructionMap[x][y] = new Obstruction(x * 10, y * 10, 10, 10, Color.GRAY, 1, 0);
+		for(int x = 0; x < gridSize; x ++){
+			for(int y = 0; y < gridSize; y ++){
+				obstructionMap[x][y] = new Obstruction(x * squareSize, y * squareSize, squareSize, squareSize, Color.GRAY, 1, 0);
 			}
 		}
 	}
@@ -119,41 +135,41 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 			g.setColor(Color.GRAY);
 			g.fillRect(0, 0, 1000, 1000);
 
-			for(int x = 0; x < 100; x ++){
-				for(int y = 0; y < 100; y ++){
+			for(int x = 0; x < gridSize; x ++){
+				for(int y = 0; y < gridSize; y ++){
 					g.setColor(obstructionMap[x][y].getColor());
 					g.fill(obstructionMap[x][y].getRect());
 				}
 			}
 
 			g.setColor(Color.WHITE);
-			g.drawRect(selectedObstruction.getX(), selectedObstruction.getY(), brushWidth * 10, brushHeight * 10);
+			g.drawRect(selectedObstruction.getX(), selectedObstruction.getY(), brushWidth * squareSize, brushHeight * squareSize);
 		}
 	}
 
 
 	@Override
 	public void mouseDragged(MouseEvent event){
-		mouseX = event.getX() - (brushWidth * 10)/2;
-		mouseY = event.getY() - (brushHeight * 10)/2;
+		mouseX = event.getX() - (brushWidth * squareSize)/2;
+		mouseY = event.getY() - (brushHeight * squareSize)/2;
 
-		if((int) (mouseX / 10) < 100 && (int) (mouseX / 10) > -1 && (int) (mouseY / 10) < 100 && (int) (mouseY / 10) > -1){
-			selectedObstruction.setLocation(obstructionMap[(int)mouseX/10][(int)mouseY/10].getX(), obstructionMap[(int)mouseX/10][(int)mouseY/10].getY());
+		if((int) (mouseX / squareSize) < gridSize && (int) (mouseX / squareSize) > -1 && (int) (mouseY / squareSize) < gridSize && (int) (mouseY / squareSize) > -1){
+			selectedObstruction.setLocation(obstructionMap[(int)mouseX/squareSize][(int)mouseY/squareSize].getX(), obstructionMap[(int)mouseX/squareSize][(int)mouseY/squareSize].getY());
 		}
 
 		if(SwingUtilities.isLeftMouseButton(event)){
-			createNewObstruction((int) (mouseX / 10), (int) (mouseY / 10));
+			createNewObstruction((int) (mouseX / squareSize), (int) (mouseY / squareSize));
 		} else if(SwingUtilities.isRightMouseButton(event)){
-			removeObstruction((int) (mouseX / 10), (int) (mouseY / 10));
+			removeObstruction((int) (mouseX / squareSize), (int) (mouseY / squareSize));
 		}
 		repaint();
 	}
 	@Override
 	public void mouseMoved(MouseEvent event) {
-		mouseX = event.getX() - (brushWidth * 10)/2;
-		mouseY = event.getY() - (brushHeight * 10)/2;
-		if((int) (mouseX / 10) < 100 && (int) (mouseX / 10) > -1 && (int) (mouseY / 10) < 100 && (int) (mouseY / 10) > -1){
-			selectedObstruction.setLocation(obstructionMap[(int)mouseX/10][(int)mouseY/10].getX(), obstructionMap[(int)mouseX/10][(int)mouseY/10].getY());
+		mouseX = event.getX() - (brushWidth * squareSize)/2;
+		mouseY = event.getY() - (brushHeight * squareSize)/2;
+		if((int) (mouseX / squareSize) < gridSize && (int) (mouseX / squareSize) > -1 && (int) (mouseY / squareSize) < gridSize && (int) (mouseY / squareSize) > -1){
+			selectedObstruction.setLocation(obstructionMap[(int)mouseX/squareSize][(int)mouseY/squareSize].getX(), obstructionMap[(int)mouseX/squareSize][(int)mouseY/squareSize].getY());
 		}
 
 
@@ -161,22 +177,22 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 	}
 	@Override
 	public void mouseClicked(MouseEvent event) {
-		mouseX = event.getX() - (brushWidth * 10)/2;
-		mouseY = event.getY() - (brushHeight * 10)/2;
-		if((int) (mouseX / 10) < 100 && (int) (mouseX / 10) > -1 && (int) (mouseY / 10) < 100 && (int) (mouseY / 10) > -1){
-			selectedObstruction.setLocation(obstructionMap[(int)mouseX/10][(int)mouseY/10].getX(), obstructionMap[(int)mouseX/10][(int)mouseY/10].getY());
+		mouseX = event.getX() - (brushWidth * squareSize)/2;
+		mouseY = event.getY() - (brushHeight * squareSize)/2;
+		if((int) (mouseX / squareSize) < gridSize && (int) (mouseX / squareSize) > -1 && (int) (mouseY / squareSize) < gridSize && (int) (mouseY / squareSize) > -1){
+			selectedObstruction.setLocation(obstructionMap[(int)mouseX/squareSize][(int)mouseY/squareSize].getX(), obstructionMap[(int)mouseX/squareSize][(int)mouseY/squareSize].getY());
 		}
 
 
 		switch(event.getButton()){
 		case 1:
-			createNewObstruction((int) (mouseX / 10), (int) (mouseY / 10));
+			createNewObstruction((int) (mouseX / squareSize), (int) (mouseY / squareSize));
 			break;
 		case 2:
-			copyObject((int) (mouseX / 10), (int) (mouseY / 10));
+			copyObject((int) (mouseX / squareSize), (int) (mouseY / squareSize));
 			break;
 		case 3:
-			removeObstruction((int) (mouseX / 10), (int) (mouseY / 10));
+			removeObstruction((int) (mouseX / squareSize), (int) (mouseY / squareSize));
 			break;
 		default:
 			break;

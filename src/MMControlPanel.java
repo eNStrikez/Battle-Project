@@ -26,10 +26,14 @@ public class MMControlPanel extends JPanel{
 	JSlider roughnessSlider;
 	JSlider typeSlider;
 	JButton colorChooseButton;
+	JButton modeToggleButton;
 	Color brushColor;
 	JColorChooser colorChooser;
 	int roughness;
 	int tileType;
+	int brushSize;
+	
+	Boolean overMode = false;
 
 	public MMControlPanel(MMEventManager newManager){
 		eManager = newManager;
@@ -38,12 +42,13 @@ public class MMControlPanel extends JPanel{
 		cDisplay.setPreferredSize(new Dimension(300, 1000));
 		roughness = 1;
 		tileType = 0;
+		brushSize = 10;
 
 		colorChooser = new JColorChooser();
 
 		JLabel widthSliderLabel = new JLabel("Width");
 		widthSliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		widthSlider = new JSlider(JSlider.HORIZONTAL, 1, 5, 2);
+		widthSlider = new JSlider(JSlider.HORIZONTAL, 1, 15, 2);
 		widthSlider.addChangeListener(new ChangeListener(){
 
 			@Override
@@ -60,7 +65,7 @@ public class MMControlPanel extends JPanel{
 
 		JLabel heightSliderLabel = new JLabel("Height");
 		heightSliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		heightSlider = new JSlider(JSlider.HORIZONTAL, 1, 5, 2);
+		heightSlider = new JSlider(JSlider.HORIZONTAL, 1, 15, 2);
 		heightSlider.addChangeListener(new ChangeListener(){
 
 			@Override
@@ -127,6 +132,18 @@ public class MMControlPanel extends JPanel{
 		typeSlider.setMajorTickSpacing(1);
 		typeSlider.setPaintTicks(true);
 		typeSlider.setPaintLabels(true);
+		
+		modeToggleButton = new JButton("Toggle Mode");
+		modeToggleButton.setFocusable(false);
+		modeToggleButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				changeMode();
+				repaint();
+			}
+			
+		});
 
 		cDisplay.add(widthSliderLabel);
 		cDisplay.add(widthSlider);
@@ -137,17 +154,24 @@ public class MMControlPanel extends JPanel{
 		cDisplay.add(roughnessSlider);
 		cDisplay.add(typeLabel);
 		cDisplay.add(typeSlider);
+		cDisplay.add(modeToggleButton);
 
 
 		add(cDisplay);
 	}
 	
-	public void updateValues(int newRoughness, Color newColor, int newTileType){
+	public void changeMode(){
+		overMode = !overMode;
+		eManager.changeMode(overMode);
+	}
+	
+	public void updateValues(int newRoughness, Color newColor, int newTileType, int newBrushSize){
 		roughnessSlider.setValue(newRoughness);
 		roughness = newRoughness;
 		brushColor = newColor;
 		typeSlider.setValue(newTileType);
 		tileType = newTileType;
+		brushSize = newBrushSize;
 		repaint();
 	}
 
@@ -158,7 +182,7 @@ public class MMControlPanel extends JPanel{
 			g.fillRect(0, 0, 300, 1000);
 
 			g.setColor(brushColor);
-			g.fillRect(50, 300, widthSlider.getValue()*10, heightSlider.getValue()*10);
+			g.fillRect(50, 300, widthSlider.getValue()*brushSize, heightSlider.getValue()*brushSize);
 		}
 	}
 }

@@ -6,29 +6,37 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 
 public class OverworldManager extends JPanel{
 
-	MapDisplay mD;
 	int screenWidth;
 	int screenHeight;
 	CardManager cM;
+	OverworldViewManager viewport;
+	Obstruction[][] map;
 
-	public OverworldManager(MapDisplay mD, int screenWidth, int screenHeight){
-		this.mD = mD;
+	public OverworldManager(int screenWidth, int screenHeight){
 		GridBagConstraints c = new GridBagConstraints();
 		setLayout(new GridBagLayout());
+		
+		SaveManager sM = new SaveManager();
+		
+		map = sM.loadBlockages("OverworldMap.txt");
 
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
+		
+		viewport = new OverworldViewManager(0, 0, map);
 		
 		Paint display = new Paint();
 		display.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		
 		c.fill = GridBagConstraints.BOTH;
-		add(display, c);
+		//add(display, c);
+		add(viewport, c);
 
 	}
 
@@ -52,6 +60,19 @@ public class OverworldManager extends JPanel{
 			break;
 		case KeyEvent.VK_S:
 			cM.showCard("OverCard", "SettlementManager");
+			break;
+			
+		case KeyEvent.VK_RIGHT:
+			viewport.changeXOffset(1);
+			break;
+		case KeyEvent.VK_LEFT:
+			viewport.changeXOffset(-1);
+			break;
+		case KeyEvent.VK_UP:
+			viewport.changeYOffset(-1);
+			break;
+		case KeyEvent.VK_DOWN:
+			viewport.changeYOffset(1);
 			break;
 		default:
 			break;

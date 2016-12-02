@@ -27,7 +27,7 @@ public class Core{
 		battlePanel.add(mD, c);
 		battlePanel.add(iP, c);
 
-		OverworldManager oM = new OverworldManager(mD, screenWidth, screenHeight);
+		OverworldManager oM = new OverworldManager(screenWidth, screenHeight);
 
 		MenuManager menuPanel = new MenuManager(screenWidth, screenHeight);
 

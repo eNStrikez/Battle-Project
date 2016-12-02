@@ -8,7 +8,7 @@ public class MMEventManager{
 		this.cUI = cUI;
 		this.MManager = MManager;
 	}
-	
+
 	public void updateBrushWidth(int newWidth){
 		cUI.updateBrushWidth(newWidth);
 	}
@@ -24,8 +24,15 @@ public class MMEventManager{
 	public void updateTileType(int newTileType){
 		cUI.updateTileType(newTileType);
 	}
-	public void updatePanel(int roughness, Color color, int tileType){
-		MManager.getCP().updateValues(roughness, color, tileType);
+	public void updatePanel(int roughness, Color color, int tileType, int brushSize){
+		MManager.getCP().updateValues(roughness, color, tileType, brushSize);
+	}
+	public void changeMode(Boolean mode){
+		if(mode){
+			cUI.changeGridSize(200);
+		} else {
+			cUI.changeGridSize(100);
+		}
 	}
 }
 
