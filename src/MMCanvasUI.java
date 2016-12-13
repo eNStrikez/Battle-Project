@@ -27,9 +27,11 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 	Obstruction[][] obstructionMap;
 	Obstruction selectedObstruction;
 	MMEventManager eM;
-	
+
 	int gridSize;
 	int squareSize;
+	Boolean isSettlement;
+	int settlementID;
 
 
 	public MMCanvasUI(){
@@ -38,6 +40,8 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 		brushWidth = 2;
 		roughness = 1;
 		tileType = 0;
+		isSettlement = false;
+		settlementID = 0;
 		//mapBlockages = new ArrayList<Obstruction>();
 
 		Paint display = new Paint();
@@ -47,25 +51,25 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		brushColor = Color.BLACK;
-		
+
 		gridSize = 100;
 		squareSize = 10;
 
 		obstructionMap = new Obstruction[gridSize][gridSize];
 		resetMap();
-		selectedObstruction = new Obstruction(0, 0, squareSize, squareSize, Color.GRAY, 1, 0);
+		selectedObstruction = new Obstruction(0, 0, squareSize, squareSize, Color.GRAY, 1, 0, false, 0);
 	}
-	
+
 	public void changeGridSize(int newSize){
 		obstructionMap = new Obstruction[newSize][newSize];
 		gridSize = newSize;
-		
+
 		squareSize = 1000 / gridSize;
 		eM.updatePanel(roughness, brushColor, tileType, squareSize);
 		resetMap();
 		repaint();
 	}
-	
+
 	public void giveEManager(MMEventManager eManager){
 		eM = eManager;
 	}
@@ -74,7 +78,10 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 		for(int sizeX = 0; sizeX < brushWidth; sizeX ++){
 			for(int sizeY = 0; sizeY < brushHeight; sizeY ++){
 				if(cX + sizeX < gridSize && cX + sizeX > -1 && cY + sizeY < gridSize && cY + sizeY > -1){
-					obstructionMap[cX + sizeX][cY  +sizeY] = new Obstruction((cX + sizeX) * squareSize, (cY + sizeY) * squareSize, squareSize, squareSize, brushColor, roughness, tileType);
+					if(isSettlement){
+						settlementID ++;
+					}
+					obstructionMap[cX + sizeX][cY  +sizeY] = new Obstruction((cX + sizeX) * squareSize, (cY + sizeY) * squareSize, squareSize, squareSize, brushColor, roughness, tileType, isSettlement, settlementID);
 				}
 			}
 		}
@@ -89,7 +96,7 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 	public void removeObstruction(int cX, int cY){
 		for(int sizeX = 0; sizeX < brushWidth; sizeX ++){
 			for(int sizeY = 0; sizeY < brushHeight; sizeY ++){
-				obstructionMap[cX + sizeX][cY  +sizeY] = new Obstruction((cX + sizeX) * squareSize, (cY + sizeY) * squareSize, squareSize, squareSize, Color.GRAY, 1, 0);
+				obstructionMap[cX + sizeX][cY  +sizeY] = new Obstruction((cX + sizeX) * squareSize, (cY + sizeY) * squareSize, squareSize, squareSize, Color.GRAY, 1, 0, false, 0);
 			}
 		}
 	}
@@ -124,9 +131,12 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 	public void resetMap(){
 		for(int x = 0; x < gridSize; x ++){
 			for(int y = 0; y < gridSize; y ++){
-				obstructionMap[x][y] = new Obstruction(x * squareSize, y * squareSize, squareSize, squareSize, Color.GRAY, 1, 0);
+				obstructionMap[x][y] = new Obstruction(x * squareSize, y * squareSize, squareSize, squareSize, Color.GRAY, 1, 0, false, 0);
 			}
 		}
+	}
+	public void placingSettlements(Boolean isPlacing){
+		isSettlement = isPlacing;
 	}
 
 	public class Paint extends JPanel{
@@ -139,6 +149,10 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 				for(int y = 0; y < gridSize; y ++){
 					g.setColor(obstructionMap[x][y].getColor());
 					g.fill(obstructionMap[x][y].getRect());
+					if(obstructionMap[x][y].isSettlement()){
+						g.setColor(Color.RED);
+						g.draw(obstructionMap[x][y].getRect());
+					}
 				}
 			}
 

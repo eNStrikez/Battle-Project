@@ -12,8 +12,10 @@ public class Obstruction implements Serializable{
 	Color color;
 	int roughness;
 	int type;
+	Boolean isSettlement;
+	int settlementID;
 	
-	public Obstruction(int x, int y, int width, int height, Color color, int roughness, int type){
+	public Obstruction(int x, int y, int width, int height, Color color, int roughness, int type, Boolean isSettlement, int settlementID){
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -22,6 +24,8 @@ public class Obstruction implements Serializable{
 		this.color = color;
 		this.roughness = roughness;
 		this.type = type;
+		this.isSettlement = isSettlement;
+		this.settlementID = settlementID;
 	}
 	
 	public int getX(){
@@ -42,6 +46,13 @@ public class Obstruction implements Serializable{
 	public int getTileType(){
 		return type;
 	}
+	public int getSettlementID(){
+		return settlementID;
+	}
+	public Boolean isSettlement(){
+		return isSettlement;
+	}
+	
 	public void setLocation(int newX, int newY){
 		x = newX;
 		y = newY;

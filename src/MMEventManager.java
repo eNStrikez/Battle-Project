@@ -27,12 +27,11 @@ public class MMEventManager{
 	public void updatePanel(int roughness, Color color, int tileType, int brushSize){
 		MManager.getCP().updateValues(roughness, color, tileType, brushSize);
 	}
+	public void updateScale(int newMapSize){
+		cUI.changeGridSize(newMapSize);
+	}
 	public void changeMode(Boolean mode){
-		if(mode){
-			cUI.changeGridSize(200);
-		} else {
-			cUI.changeGridSize(100);
-		}
+		cUI.placingSettlements(mode);
 	}
 }
 

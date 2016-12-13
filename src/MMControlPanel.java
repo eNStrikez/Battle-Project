@@ -25,13 +25,15 @@ public class MMControlPanel extends JPanel{
 	JSlider heightSlider;
 	JSlider roughnessSlider;
 	JSlider typeSlider;
+	JSlider scaleSlider;
 	JButton colorChooseButton;
-	JButton modeToggleButton;
+	JButton placeSettlementButton;
 	Color brushColor;
 	JColorChooser colorChooser;
 	int roughness;
 	int tileType;
 	int brushSize;
+	int mapSize;
 	
 	Boolean overMode = false;
 
@@ -43,6 +45,7 @@ public class MMControlPanel extends JPanel{
 		roughness = 1;
 		tileType = 0;
 		brushSize = 10;
+		mapSize = 100;
 
 		colorChooser = new JColorChooser();
 
@@ -133,9 +136,29 @@ public class MMControlPanel extends JPanel{
 		typeSlider.setPaintTicks(true);
 		typeSlider.setPaintLabels(true);
 		
-		modeToggleButton = new JButton("Toggle Mode");
-		modeToggleButton.setFocusable(false);
-		modeToggleButton.addActionListener(new ActionListener(){
+		JLabel scaleLabel = new JLabel("Map Size (in 10s)");
+
+		scaleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		scaleSlider = new JSlider(JSlider.HORIZONTAL, 0, 30, 10);
+		scaleSlider.addChangeListener(new ChangeListener(){
+
+			@Override
+			public void stateChanged(ChangeEvent event) {
+				mapSize = scaleSlider.getValue() * 10;
+				eManager.updateScale(mapSize);
+				repaint();
+			}
+
+		});
+		scaleSlider.setFocusable(false);
+		scaleSlider.setMinorTickSpacing(5);
+		scaleSlider.setMajorTickSpacing(5);
+		scaleSlider.setPaintTicks(true);
+		scaleSlider.setPaintLabels(true);
+		
+		placeSettlementButton = new JButton("Place settlement");
+		placeSettlementButton.setFocusable(false);
+		placeSettlementButton.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -154,7 +177,9 @@ public class MMControlPanel extends JPanel{
 		cDisplay.add(roughnessSlider);
 		cDisplay.add(typeLabel);
 		cDisplay.add(typeSlider);
-		cDisplay.add(modeToggleButton);
+		cDisplay.add(scaleLabel);
+		cDisplay.add(scaleSlider);
+		cDisplay.add(placeSettlementButton);
 
 
 		add(cDisplay);
