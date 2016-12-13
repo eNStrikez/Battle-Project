@@ -17,6 +17,9 @@ public class OverworldManager extends JPanel{
 	CardManager cM;
 	OverworldViewManager viewport;
 	Obstruction[][] map;
+	JPanel informationHolder;
+	JPanel battleHolder;
+	JPanel controlHolder;
 
 	public OverworldManager(int screenWidth, int screenHeight){
 		GridBagConstraints c = new GridBagConstraints();
@@ -31,13 +34,34 @@ public class OverworldManager extends JPanel{
 		
 		viewport = new OverworldViewManager(0, 0, map);
 		
+		informationHolder = new JPanel();
+		informationHolder.setPreferredSize(new Dimension(500, 800));
+		battleHolder = new JPanel();
+		battleHolder.setPreferredSize(new Dimension(800, 200));
+		controlHolder = new JPanel();
+		controlHolder.setPreferredSize(new Dimension(500, 200));
+		
 		Paint display = new Paint();
 		display.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		
 		c.fill = GridBagConstraints.BOTH;
 		//add(display, c);
+		c.gridx = 0;
+		c.gridy = 0;
+	
 		add(viewport, c);
-
+		
+		/*
+		c.gridx = 1;
+		c.gridy = 0;
+		add(informationHolder,c );
+		c.gridx = 0;
+		c.gridy = 1;
+		add(battleHolder, c);
+		c.gridx = 1;
+		c.gridy = 1;
+		add(controlHolder, c);
+		*/
 	}
 
 	public class Paint extends JPanel{

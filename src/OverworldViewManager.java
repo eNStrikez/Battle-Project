@@ -21,10 +21,10 @@ public class OverworldViewManager extends JPanel{
 		scaleSize = 0.75f;
 		scaledWidth = (int) (100 * scaleSize);
 
-		setPreferredSize(new Dimension(800, 800));
+		setPreferredSize(new Dimension(1000, 1000));
 
 		Paint display = new Paint();
-		display.setPreferredSize(new Dimension(800, 800));
+		display.setPreferredSize(new Dimension(1000, 1000));
 		add(display);
 	}
 
@@ -51,6 +51,9 @@ public class OverworldViewManager extends JPanel{
 			}
 		}
 		repaint();
+	}
+	public int getSettlementAtLocation(int mouseX, int mouseY){
+		return 0;
 	}
 
 	public class Paint extends JPanel{
