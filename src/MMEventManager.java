@@ -9,11 +9,8 @@ public class MMEventManager{
 		this.MManager = MManager;
 	}
 
-	public void updateBrushWidth(int newWidth){
-		cUI.updateBrushWidth(newWidth);
-	}
-	public void updateBrushHeight(int newHeight){
-		cUI.updateBrushHeight(newHeight);
+	public void updateBrushSize(int newSize){
+		cUI.updateBrushSize(newSize);
 	}
 	public void updateColor(Color newColor){
 		cUI.updateColor(newColor);

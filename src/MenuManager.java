@@ -4,10 +4,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -106,6 +108,9 @@ public class MenuManager extends JPanel{
 			Graphics2D g = (Graphics2D) gr;
 			g.setColor(Color.GRAY);
 			g.fillRect(0, 0, screenWidth, screenHeight);
+			
+			Image background = new ImageIcon("Test.jpg").getImage();
+			g.drawImage(background, 0, 0, 1300, 1000, null);
 		}
 	}
 	

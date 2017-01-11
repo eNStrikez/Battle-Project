@@ -3,13 +3,16 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -20,18 +23,21 @@ import javax.swing.event.ChangeListener;
 
 public class MMControlPanel extends JPanel{
 
-	JSlider widthSlider;
+	JComboBox sizeBox;
+	JComboBox terrainTypeBox;
+	
+	JPanel spaceHolder;
+	
+	
+	JSlider sizeSlider;
 	MMEventManager eManager;
-	JSlider heightSlider;
 	JSlider roughnessSlider;
-	JSlider typeSlider;
 	JSlider scaleSlider;
 	JButton colorChooseButton;
 	JButton placeSettlementButton;
 	Color brushColor;
 	JColorChooser colorChooser;
 	int roughness;
-	int tileType;
 	int brushSize;
 	int mapSize;
 	
@@ -42,46 +48,39 @@ public class MMControlPanel extends JPanel{
 		brushColor = Color.BLACK;
 		Paint cDisplay = new Paint();
 		cDisplay.setPreferredSize(new Dimension(300, 1000));
+		cDisplay.setLayout(new GridLayout(0,1));
 		roughness = 1;
-		tileType = 0;
 		brushSize = 10;
 		mapSize = 100;
+		
+		spaceHolder = new JPanel();
+		spaceHolder.setOpaque(false);
 
 		colorChooser = new JColorChooser();
+		
+		sizeBox = new JComboBox();
+		
 
-		JLabel widthSliderLabel = new JLabel("Width");
-		widthSliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		widthSlider = new JSlider(JSlider.HORIZONTAL, 1, 15, 2);
-		widthSlider.addChangeListener(new ChangeListener(){
+
+		JLabel sizeLabel = new JLabel(new ImageIcon("BlankHolder.png"));
+		sizeLabel.setText("Brush Size");
+		sizeLabel.setVerticalTextPosition(JLabel.BOTTOM);
+		sizeLabel.setHorizontalTextPosition(JLabel.CENTER);
+			
+		sizeSlider = new JSlider(JSlider.HORIZONTAL, 1, 15, 2);
+		sizeSlider.addChangeListener(new ChangeListener(){
 
 			@Override
 			public void stateChanged(ChangeEvent event) {
-				eManager.updateBrushWidth(widthSlider.getValue());
+				eManager.updateBrushSize(sizeSlider.getValue());
 				repaint();
 			}
 
 		});
-		widthSlider.setFocusable(false);
-		widthSlider.setMajorTickSpacing(1);
-		widthSlider.setPaintTicks(true);
-		widthSlider.setPaintLabels(true);
-
-		JLabel heightSliderLabel = new JLabel("Height");
-		heightSliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		heightSlider = new JSlider(JSlider.HORIZONTAL, 1, 15, 2);
-		heightSlider.addChangeListener(new ChangeListener(){
-
-			@Override
-			public void stateChanged(ChangeEvent event) {
-				eManager.updateBrushHeight(heightSlider.getValue());
-				repaint();
-			}
-
-		});
-		heightSlider.setFocusable(false);
-		heightSlider.setMajorTickSpacing(1);
-		heightSlider.setPaintTicks(true);
-		heightSlider.setPaintLabels(true);
+		sizeSlider.setFocusable(false);
+		sizeSlider.setMajorTickSpacing(1);
+		sizeSlider.setPaintTicks(true);
+		sizeSlider.setPaintLabels(true);
 
 		colorChooseButton = new JButton("Pick Colour");
 		colorChooseButton.setFocusable(false);
@@ -96,9 +95,11 @@ public class MMControlPanel extends JPanel{
 
 		});
 
-		JLabel roughnessLabel = new JLabel("Roughness (0 for wall)");
+		JLabel roughnessLabel = new JLabel(new ImageIcon("BlankHolder.png"));
+		roughnessLabel.setText("Roughness (0 for wall)");
+		roughnessLabel.setVerticalTextPosition(JLabel.BOTTOM);
+		roughnessLabel.setHorizontalTextPosition(JLabel.CENTER);
 
-		roughnessLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		roughnessSlider = new JSlider(JSlider.HORIZONTAL, 0, 20, 1);
 		roughnessSlider.addChangeListener(new ChangeListener(){
 
@@ -115,28 +116,25 @@ public class MMControlPanel extends JPanel{
 		roughnessSlider.setMajorTickSpacing(5);
 		roughnessSlider.setPaintTicks(true);
 		roughnessSlider.setPaintLabels(true);
-
-		JLabel typeLabel = new JLabel("Type(Land:0, Chasm:1, Water:2, Bridge:3)");
-
-		typeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		typeSlider = new JSlider(JSlider.HORIZONTAL, 0, 3, 0);
-		typeSlider.addChangeListener(new ChangeListener(){
+		
+		String[] terrainTypes = {"Land", "Chasm", "Water", "Bridge"};
+		terrainTypeBox = new JComboBox(terrainTypes);
+		terrainTypeBox.setSelectedIndex(0);
+		terrainTypeBox.setFocusable(false);
+		terrainTypeBox.addActionListener(new ActionListener(){
 
 			@Override
-			public void stateChanged(ChangeEvent event) {
-				tileType = typeSlider.getValue();
-				eManager.updateTileType(tileType);
+			public void actionPerformed(ActionEvent event) {
+				eManager.updateTileType(terrainTypeBox.getSelectedIndex());
 				repaint();
 			}
-
+			
 		});
-		typeSlider.setFocusable(false);
-		typeSlider.setMinorTickSpacing(1);
-		typeSlider.setMajorTickSpacing(1);
-		typeSlider.setPaintTicks(true);
-		typeSlider.setPaintLabels(true);
 		
-		JLabel scaleLabel = new JLabel("Map Size (in 10s)");
+		JLabel scaleLabel = new JLabel(new ImageIcon("BlankHolder.png"));
+		scaleLabel.setText("Map Scaling");
+		scaleLabel.setVerticalTextPosition(JLabel.BOTTOM);
+		scaleLabel.setHorizontalTextPosition(JLabel.CENTER);
 
 		scaleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		scaleSlider = new JSlider(JSlider.HORIZONTAL, 0, 30, 10);
@@ -168,15 +166,13 @@ public class MMControlPanel extends JPanel{
 			
 		});
 
-		cDisplay.add(widthSliderLabel);
-		cDisplay.add(widthSlider);
-		cDisplay.add(heightSliderLabel);
-		cDisplay.add(heightSlider);
+		cDisplay.add(spaceHolder);
+		cDisplay.add(sizeLabel);
+		cDisplay.add(sizeSlider);
 		cDisplay.add(colorChooseButton);
 		cDisplay.add(roughnessLabel);
 		cDisplay.add(roughnessSlider);
-		cDisplay.add(typeLabel);
-		cDisplay.add(typeSlider);
+		cDisplay.add(terrainTypeBox);
 		cDisplay.add(scaleLabel);
 		cDisplay.add(scaleSlider);
 		cDisplay.add(placeSettlementButton);
@@ -194,8 +190,7 @@ public class MMControlPanel extends JPanel{
 		roughnessSlider.setValue(newRoughness);
 		roughness = newRoughness;
 		brushColor = newColor;
-		typeSlider.setValue(newTileType);
-		tileType = newTileType;
+		terrainTypeBox.setSelectedIndex(newTileType);
 		brushSize = newBrushSize;
 		repaint();
 	}
@@ -203,11 +198,11 @@ public class MMControlPanel extends JPanel{
 	public class Paint extends JPanel{
 		public void paintComponent(Graphics gr){
 			Graphics2D g = (Graphics2D) gr;
-			g.setColor(Color.CYAN);
+			g.setColor(Color.GRAY);
 			g.fillRect(0, 0, 300, 1000);
 
 			g.setColor(brushColor);
-			g.fillRect(50, 300, widthSlider.getValue()*brushSize, heightSlider.getValue()*brushSize);
+			g.fillRect((300-sizeSlider.getValue()*brushSize)/2, (160-sizeSlider.getValue()*brushSize)/2, sizeSlider.getValue()*brushSize, sizeSlider.getValue()*brushSize);
 		}
 	}
 }
