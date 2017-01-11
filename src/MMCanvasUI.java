@@ -151,7 +151,7 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 				}
 			}
 
-			g.setColor(Color.WHITE);
+			g.setColor(Color.BLACK);
 			g.drawRect(selectedObstruction.getX(), selectedObstruction.getY(), brushSize * squareSize, brushSize * squareSize);
 		}
 	}
