@@ -39,7 +39,6 @@ public class MMControlPanel extends JPanel{
 	JColorChooser colorChooser;
 	int roughness;
 	int brushSize;
-	int mapSize;
 	
 	Boolean overMode = false;
 
@@ -51,7 +50,6 @@ public class MMControlPanel extends JPanel{
 		cDisplay.setLayout(new GridLayout(0,1));
 		roughness = 1;
 		brushSize = 10;
-		mapSize = 100;
 		
 		spaceHolder = new JPanel();
 		spaceHolder.setOpaque(false);
@@ -105,8 +103,7 @@ public class MMControlPanel extends JPanel{
 
 			@Override
 			public void stateChanged(ChangeEvent event) {
-				roughness = roughnessSlider.getValue();
-				eManager.updateRoughness(roughness);
+				eManager.updateRoughness(roughnessSlider.getValue());
 				repaint();
 			}
 
@@ -142,8 +139,7 @@ public class MMControlPanel extends JPanel{
 
 			@Override
 			public void stateChanged(ChangeEvent event) {
-				mapSize = scaleSlider.getValue() * 10;
-				eManager.updateScale(mapSize);
+				eManager.updateScale(scaleSlider.getValue() * 10);
 				repaint();
 			}
 

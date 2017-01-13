@@ -84,6 +84,9 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 		case "SettlementManager":
 			sM.mouseDragged(event);
 			break;
+		case "OverCard":
+			oM.mouseDragged(event);
+			break;
 		default:
 			break;
 		}
@@ -95,6 +98,9 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 		switch(cM.getCurrentCard()){
 		case "SettlementManager":
 			sM.mouseMoved(event);
+			break;
+		case "OverCard":
+			oM.mouseMoved(event);
 			break;
 		default:
 			break;
@@ -111,6 +117,8 @@ public class FrameManager implements MouseListener, MouseMotionListener, KeyList
 		case "SettlementManager":
 			sM.mouseClicked(event);
 			break;
+		case "OverCard":
+			oM.mouseClicked(event);
 		default:
 			break;
 		}

@@ -73,12 +73,12 @@ public class MMCanvasUI extends JPanel implements MouseMotionListener, MouseList
 	}
 
 	public void createNewObstruction(int cX, int cY){
+		if(isSettlement){
+			settlementID ++;
+		}
 		for(int sizeX = 0; sizeX < brushSize; sizeX ++){
 			for(int sizeY = 0; sizeY < brushSize; sizeY ++){
 				if(cX + sizeX < gridSize && cX + sizeX > -1 && cY + sizeY < gridSize && cY + sizeY > -1){
-					if(isSettlement){
-						settlementID ++;
-					}
 					obstructionMap[cX + sizeX][cY  +sizeY] = new Obstruction((cX + sizeX) * squareSize, (cY + sizeY) * squareSize, squareSize, squareSize, brushColor, roughness, tileType, isSettlement, settlementID);
 				}
 			}

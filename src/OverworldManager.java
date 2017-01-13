@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -17,51 +18,33 @@ public class OverworldManager extends JPanel{
 	CardManager cM;
 	OverworldViewManager viewport;
 	Obstruction[][] map;
-	JPanel informationHolder;
-	JPanel battleHolder;
-	JPanel controlHolder;
 
 	public OverworldManager(int screenWidth, int screenHeight){
 		GridBagConstraints c = new GridBagConstraints();
 		setLayout(new GridBagLayout());
-		
+
 		SaveManager sM = new SaveManager();
-		
+
 		map = sM.loadBlockages("OverworldMap.txt");
 
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
-		
+
 		viewport = new OverworldViewManager(0, 0, map);
-		
-		informationHolder = new JPanel();
-		informationHolder.setPreferredSize(new Dimension(500, 800));
-		battleHolder = new JPanel();
-		battleHolder.setPreferredSize(new Dimension(800, 200));
-		controlHolder = new JPanel();
-		controlHolder.setPreferredSize(new Dimension(500, 200));
-		
+		OverworldInformationPanel infoPanel = new OverworldInformationPanel(300, 1000);
+
 		Paint display = new Paint();
 		display.setPreferredSize(new Dimension(screenWidth, screenHeight));
-		
+
 		c.fill = GridBagConstraints.BOTH;
-		//add(display, c);
 		c.gridx = 0;
 		c.gridy = 0;
-	
+
 		add(viewport, c);
-		
-		/*
+
 		c.gridx = 1;
-		c.gridy = 0;
-		add(informationHolder,c );
-		c.gridx = 0;
-		c.gridy = 1;
-		add(battleHolder, c);
-		c.gridx = 1;
-		c.gridy = 1;
-		add(controlHolder, c);
-		*/
+		add(infoPanel, c);
+
 	}
 
 	public class Paint extends JPanel{
@@ -72,9 +55,57 @@ public class OverworldManager extends JPanel{
 			g.fillRect(0, 0, screenWidth, screenHeight);
 		}
 	}
-	
+
 	public void giveCardManager(CardManager newCM){
 		cM = newCM;
+	}
+
+	public void mouseMoved(MouseEvent event){
+		int mouseX = event.getX();
+		int mouseY = event.getY();
+
+		int distIntoViewportX = mouseX - viewport.getX();
+		int distIntoViewportY = mouseY - viewport.getY();
+
+		if(distIntoViewportX > 0 && distIntoViewportX < viewport.getWidth()){
+			if(distIntoViewportY > 0 && distIntoViewportY < viewport.getHeight()){
+
+				//mouse is inside the view port
+				if(viewport.getAtLocation(distIntoViewportX, distIntoViewportY)){
+					viewport.getSettlementIDAtLocation();
+				}
+
+			}
+		}
+	}
+
+	public void mouseClicked(MouseEvent event){
+		int distIntoViewportX = event.getX() - viewport.getX();
+		int distIntoViewportY = event.getY() - viewport.getY();
+
+		if(distIntoViewportX > 0 && distIntoViewportX < viewport.getWidth()){
+			if(distIntoViewportY > 0 && distIntoViewportY < viewport.getHeight()){
+				viewport.clicked();
+				mouseMoved(event);
+				if(viewport.getSettlementIDAtLocation() != 0 && viewport.getSettlementIDAtLocation() != viewport.getLastSelectedSettlement()){
+					viewport.clicked();
+				}
+			}
+		}
+	}
+	public void mouseDragged(MouseEvent event){
+		int distIntoViewportX = event.getX() - viewport.getX();
+		int distIntoViewportY = event.getY() - viewport.getY();
+
+		if(distIntoViewportX > 0 && distIntoViewportX < viewport.getWidth()){
+			if(distIntoViewportY > 0 && distIntoViewportY < viewport.getHeight()){
+				viewport.clicked();
+				mouseMoved(event);
+				if(viewport.getSettlementIDAtLocation() != 0 && viewport.getSettlementIDAtLocation() != viewport.getLastSelectedSettlement()){
+					viewport.clicked();
+				}
+			}
+		}
 	}
 
 	public void keyPressed(KeyEvent event){
@@ -85,7 +116,7 @@ public class OverworldManager extends JPanel{
 		case KeyEvent.VK_S:
 			cM.showCard("OverCard", "SettlementManager");
 			break;
-			
+
 		case KeyEvent.VK_RIGHT:
 			viewport.changeXOffset(1);
 			break;
