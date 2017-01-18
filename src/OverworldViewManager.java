@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,9 +16,14 @@ public class OverworldViewManager extends JPanel{
 	float scaleSize;
 	int scaledWidth;
 	int squareSize;
-	int lastSettlementID;
-	Boolean clickFixed;
-	int lastSelectedSettlement;
+	Boolean selectedFixed;
+	ArrayList<Army> allArmies;
+	Boolean armyHovering;
+	Boolean settlementHovering;
+	int hoveringID;
+	Selectable selected;
+	Army hoveringArmy;
+	Settlement hoveringSettlement;
 
 	public OverworldViewManager(int startX, int startY, Obstruction[][] worldMap){
 		xOffset = startX;
@@ -26,9 +32,9 @@ public class OverworldViewManager extends JPanel{
 		scaleSize = 1f;
 		scaledWidth = (int) (100 * scaleSize);
 		squareSize = 1000/scaledWidth;
-		lastSettlementID = 0;
-		clickFixed = false;
-		lastSelectedSettlement = 0;
+		selectedFixed = false;
+		armyHovering = false;
+		settlementHovering = false;
 
 		setPreferredSize(new Dimension(1000, 1000));
 
@@ -61,17 +67,54 @@ public class OverworldViewManager extends JPanel{
 		}
 		repaint();
 	}
-	public int getSettlementIDAtLocation(){
-		return lastSettlementID;
+	public Selectable getSelectedAtLocation(){
+		return selected;
 	}
 
-	public Boolean getAtLocation(int x, int y){
+	public Boolean isSomethingAtLocation(int x, int y){
 		int[] coords = getGridLocation(x, y);
-		if(!clickFixed){
-			lastSettlementID = map[coords[0] + xOffset][coords[1] + yOffset].getSettlementID();
+		if(map[coords[0] + xOffset][coords[1] + yOffset].getSettlementID() != 0){
+			settlementHovering = true;
+			hoveringID = map[coords[0] + xOffset][coords[1] + yOffset].getSettlementID();
+			// get the settlement from the database and set the hovering settlement to that settlement
+			
+			if(!selectedFixed){
+				selected = hoveringSettlement;
+			}
+			armyHovering = false;
+			for(Army nextArmy: allArmies){
+				if(nextArmy.isSelected()){
+					nextArmy.setSelected(false);
+				}
+			}
+		} else {
+			settlementHovering = false;
+			armyHovering = false;
+			for(Army nextArmy: allArmies){
+				if(nextArmy.getX() == coords[0] + xOffset && nextArmy.getY() == coords[1] + yOffset){
+					nextArmy.setSelected(true);
+					hoveringArmy = nextArmy;
+					if(!selectedFixed){
+						selected = hoveringArmy;
+					}
+					armyHovering = true;
+					hoveringID = nextArmy.getID();
+					settlementHovering = false;
+				} else {
+					nextArmy.setSelected(false);
+				}
+			}
 		}
 		repaint();
-		return map[coords[0] + xOffset][coords[1] + yOffset].isSettlement();
+		if(armyHovering || settlementHovering){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public Selectable getSelected(){
+		return selected;
 	}
 
 	public int[] getGridLocation(int x, int y){
@@ -84,14 +127,41 @@ public class OverworldViewManager extends JPanel{
 	}
 
 	public void clicked(){
-		if(lastSettlementID != 0){
-			lastSelectedSettlement = lastSettlementID;
-			clickFixed = !clickFixed;
+		if(!selectedFixed){
+			if(settlementHovering || armyHovering){
+				selectedFixed = true;
+			}
+		} else {
+			if(!settlementHovering && !armyHovering){
+				selectedFixed = false;
+			} else if(settlementHovering){
+				selected = hoveringSettlement;
+			} else {
+				selected = hoveringArmy;
+			}
 		}
 	}
-	
-	public int getLastSelectedSettlement(){
-		return lastSelectedSettlement;
+
+	public Boolean isMouseingOverSomething(){
+		if(armyHovering || settlementHovering){
+			System.out.println("Can double click1");
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public Boolean isMouseingOverSelected(){
+		if(settlementHovering){
+
+		} else {
+			//work out if the army that has the selected ID is still being hovered over
+
+		}
+		return true;
+	}
+
+	public void giveArmies(ArrayList<Army> givenAllArmies){
+		allArmies = givenAllArmies;
 	}
 
 	public class Paint extends JPanel{
@@ -101,6 +171,7 @@ public class OverworldViewManager extends JPanel{
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, 1000, 1000);
 
+			//draw the map
 			for(int xCount = 0; xCount < scaledWidth; xCount ++){
 				for(int yCount = 0; yCount < scaledWidth; yCount ++){
 					Obstruction currentSquare = map[xCount + xOffset][yCount + yOffset];
@@ -108,12 +179,22 @@ public class OverworldViewManager extends JPanel{
 					g.fillRect(squareSize * xCount, squareSize * yCount, squareSize, squareSize);
 
 					if(currentSquare.isSettlement()){
-						if(currentSquare.getSettlementID() == lastSettlementID){
+						if(currentSquare.getSettlementID() == hoveringID){
 							g.setColor(Color.YELLOW);
+							System.out.println(hoveringID);
 							g.drawRect(squareSize * xCount, squareSize * yCount, squareSize, squareSize);
 
 						}
 					}
+				}
+			}
+
+			//draw the armies
+			for(Army nextArmy: allArmies){
+				g.drawImage(nextArmy.getImage(), (nextArmy.getX() - xOffset) * squareSize, (nextArmy.getY() - yOffset) * squareSize, squareSize, squareSize, null);
+				if(nextArmy.isSelected()){
+					g.setColor(Color.YELLOW);
+					g.drawRect((nextArmy.getX() - xOffset) * squareSize, (nextArmy.getY() - yOffset) * squareSize, squareSize, squareSize);
 				}
 			}
 		}

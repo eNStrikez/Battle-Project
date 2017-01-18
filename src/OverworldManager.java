@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -18,6 +19,7 @@ public class OverworldManager extends JPanel{
 	CardManager cM;
 	OverworldViewManager viewport;
 	Obstruction[][] map;
+	ArrayList<Army> allArmies;
 
 	public OverworldManager(int screenWidth, int screenHeight){
 		GridBagConstraints c = new GridBagConstraints();
@@ -35,6 +37,19 @@ public class OverworldManager extends JPanel{
 
 		Paint display = new Paint();
 		display.setPreferredSize(new Dimension(screenWidth, screenHeight));
+		
+		allArmies = new ArrayList<Army>();
+		
+		//for testing purposes adding in an initial army to manipulate
+		ArrayList<Unit> testArmyUnits = new ArrayList<Unit>();
+		testArmyUnits.add(new Unit(430, 270, 5, 200, Color.ORANGE, 10, 1, 500, 10));
+		Army testArmy1 = new Army(testArmyUnits, new ImageIcon("TestArmy.png").getImage());
+		testArmy1.setX(20);
+		testArmy1.setY(20);
+		testArmy1.setID(87);
+		allArmies.add(testArmy1);
+		
+		viewport.giveArmies(allArmies);
 
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
@@ -71,8 +86,9 @@ public class OverworldManager extends JPanel{
 			if(distIntoViewportY > 0 && distIntoViewportY < viewport.getHeight()){
 
 				//mouse is inside the view port
-				if(viewport.getAtLocation(distIntoViewportX, distIntoViewportY)){
-					viewport.getSettlementIDAtLocation();
+				if(viewport.isSomethingAtLocation(distIntoViewportX, distIntoViewportY)){
+					Selectable selectedObject = viewport.getSelected();
+					//System.out.println(selectedObject.getID());
 				}
 
 			}
@@ -87,25 +103,16 @@ public class OverworldManager extends JPanel{
 			if(distIntoViewportY > 0 && distIntoViewportY < viewport.getHeight()){
 				viewport.clicked();
 				mouseMoved(event);
-				if(viewport.getSettlementIDAtLocation() != 0 && viewport.getSettlementIDAtLocation() != viewport.getLastSelectedSettlement()){
+				//check if the mouse is over another object and if so run click again to select it
+				if(viewport.isMouseingOverSomething() && !viewport.isMouseingOverSelected()){
 					viewport.clicked();
+					System.out.println("Double clicked");
 				}
 			}
 		}
 	}
 	public void mouseDragged(MouseEvent event){
-		int distIntoViewportX = event.getX() - viewport.getX();
-		int distIntoViewportY = event.getY() - viewport.getY();
-
-		if(distIntoViewportX > 0 && distIntoViewportX < viewport.getWidth()){
-			if(distIntoViewportY > 0 && distIntoViewportY < viewport.getHeight()){
-				viewport.clicked();
-				mouseMoved(event);
-				if(viewport.getSettlementIDAtLocation() != 0 && viewport.getSettlementIDAtLocation() != viewport.getLastSelectedSettlement()){
-					viewport.clicked();
-				}
-			}
-		}
+		//to be added once mouse clicked is complete
 	}
 
 	public void keyPressed(KeyEvent event){

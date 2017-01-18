@@ -69,7 +69,11 @@ public class SettlementManager extends JPanel implements Cloneable{
 		selectedList = new ArrayList<int[]>();
 
 		settlementList = new ArrayList<Settlement>();
-		settlementList.add(new Settlement(10, 10, 10));
+		Settlement testSettlement1 = new Settlement(10);
+		testSettlement1.setX(10);
+		testSettlement1.setY(10);
+		testSettlement1.setID(2);
+		settlementList.add(testSettlement1);
 
 		currentSettlement = settlementList.get(0);
 		currentBuildingList = currentSettlement.getBuildings();
